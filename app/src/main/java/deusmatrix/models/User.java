@@ -1,9 +1,9 @@
 package deusmatrix.models;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Objects;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "users")
@@ -18,20 +18,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "user_gen")
     private Long id;
 
-    @NotNull
-    @Column(nullable = false)
+    @NotNull @Column(nullable = false)
     private String name;
 
     @NotNull @Column(nullable = false)
     private Date creationDate;
 
-    @NotNull @OneToOne
+    @NotNull @Column(nullable = false)
     private long level;
 
-    @NotNull @OneToOne
+    @NotNull @Column(nullable = false)
     private long experience;
 
-    @NotNull @OneToOne
+    @NotNull @Column(nullable = false)
     private long experienceToNextLevel;
 
     @NotNull @OneToOne
@@ -117,7 +116,13 @@ public class User {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return level == user.level && experience == user.experience && experienceToNextLevel == user.experienceToNextLevel && Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(creationDate, user.creationDate) && Objects.equals(statistic, user.statistic);
+        return level == user.level
+                && experience == user.experience
+                && experienceToNextLevel == user.experienceToNextLevel
+                && Objects.equals(id, user.id)
+                && Objects.equals(name, user.name)
+                && Objects.equals(creationDate, user.creationDate)
+                && Objects.equals(statistic, user.statistic);
     }
 
     @Override

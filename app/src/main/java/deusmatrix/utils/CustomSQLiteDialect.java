@@ -1,4 +1,4 @@
-package dark_shell.utils;
+package deusmatrix.utils;
 
 import java.sql.Types;
 import org.hibernate.dialect.Dialect;

@@ -1,16 +1,55 @@
 package deusmatrix.utils;
 
-
+import deusmatrix.models.Statistic;
+import deusmatrix.models.User;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
 import java.net.URL;
+import java.time.Instant;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
 
 public class SupportFunctions {
+    public static User createEmptyUser(String name) {
+        Date creationDate = Date.from(Instant.now());
+        Long level = 1L;
+        Long experience = 0L;
+        Long experienceToNextLevel = 100L;
+        Statistic statistic = createEmptyStatistic();
+
+        return new User(name, creationDate, level, experience, experienceToNextLevel, statistic);
+    }
+
+    public static Statistic createEmptyStatistic() {
+        Date lastPlayDate = Date.from(Instant.now());
+        Long daysInGame = 1L;
+        Long easyWins = 0L;
+        Long middleWins = 0L;
+        Long hardWins = 0L;
+        Long easyBestTime = 0L;
+        Long middleBestTime = 0L;
+        Long hardBestTime = 0L;
+        Long easyLose = 0L;
+        Long middleLose = 0L;
+        Long hardLose = 0L;
+
+        return new Statistic(
+                lastPlayDate,
+                daysInGame,
+                easyWins,
+                middleWins,
+                hardWins,
+                easyBestTime,
+                middleBestTime,
+                hardBestTime,
+                easyLose,
+                middleLose,
+                hardLose);
+    }
+
     public static void writeContentInNewFile(File folderToSave, String name, List<String> content) {
         try {
             File file = new File(folderToSave, name);
@@ -70,14 +109,14 @@ public class SupportFunctions {
     public static Image getAppIcon() {
         Image appIcon = null;
 
-        URL appIconUrl = SupportFunctions.class.getResource("/dark_shell/images/app_icon.jpg");
+        URL appIconUrl = SupportFunctions.class.getResource("/deusmatrix/images/app_icon.jpg");
         appIcon = Toolkit.getDefaultToolkit().getImage(appIconUrl);
 
         return appIcon;
     }
 
     public static ImageIcon getResourceImage(String name) {
-        String path = "dark_shell/images/" + name;
+        String path = "deusmatrix/images/" + name;
         URL resourceURL = SupportFunctions.class.getClassLoader().getResource(path);
 
         return new ImageIcon(resourceURL);

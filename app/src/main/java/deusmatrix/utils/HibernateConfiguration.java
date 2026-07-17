@@ -78,7 +78,7 @@ public class HibernateConfiguration {
                                 put(AvailableSettings.DRIVER, configReader.getDbDriver());
                                 put(AvailableSettings.URL, lastUsedConnectionURL);
 
-                                put(AvailableSettings.DIALECT, dark_shell.utils.CustomSQLiteDialect.class);
+                                put(AvailableSettings.DIALECT, CustomSQLiteDialect.class);
                                 put(AvailableSettings.SHOW_SQL, false);
                                 put(AvailableSettings.QUERY_STARTUP_CHECKING, false);
 

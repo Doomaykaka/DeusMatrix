@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"deusmatrix"},{"l":"deusmatrix.controllers"},{"l":"deusmatrix.dao"},{"l":"deusmatrix.dao.utils"},{"l":"deusmatrix.gui"},{"l":"deusmatrix.models"},{"l":"deusmatrix.utils"}];updateSearchResults();
