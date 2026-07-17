@@ -4,10 +4,7 @@ import deusmatrix.controllers.GameOperationsController;
 import deusmatrix.controllers.SudokuGameController;
 import deusmatrix.dao.StatisticsDAO;
 import deusmatrix.dao.UsersDAO;
-import deusmatrix.models.GameDifficult;
-import deusmatrix.models.GameField;
-import deusmatrix.models.GameFieldSolver;
-import deusmatrix.models.User;
+import deusmatrix.models.*;
 import deusmatrix.utils.HibernateConfiguration;
 import deusmatrix.utils.Logger;
 import deusmatrix.utils.SupportFunctions;
@@ -19,18 +16,16 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.swing.*;
 import javax.swing.border.Border;
 
 public class GameWindow extends JFrame {
@@ -39,6 +34,7 @@ public class GameWindow extends JFrame {
     private SudokuGameController sudokuGameController;
     private GameOperationsController gameOperationsController;
 
+    private GameField gameField;
     private GameField solvedGameField;
 
     private JLabel timerLabel;
@@ -53,9 +49,17 @@ public class GameWindow extends JFrame {
     private int selectedRow = -1;
     private int selectedColumn = -1;
 
+    private int usedHintsCount = 0;
+
+    private boolean gameOver;
+
+    private static final int SECONDS_IN_MINUTE = 60;
+    private static final int MILLISECONDS_IN_SECOND = 1000;
+
     public GameWindow(User user, GameDifficult difficult) {
         this.user = user;
         this.difficult = difficult;
+        this.gameOver = false;
 
         initController();
         initUI();
@@ -68,6 +72,25 @@ public class GameWindow extends JFrame {
         gameOperationsController = new GameOperationsController(usersDAO, statisticsDAO);
 
         sudokuGameController = new SudokuGameController();
+        Runnable updateCallbackFromTimer = createUpdateTimerLabelCallback(sudokuGameController);
+        sudokuGameController.setUpdateCallbackFromTimer(updateCallbackFromTimer);
+
+        sudokuGameController.timerStart();
+    }
+
+    private Runnable createUpdateTimerLabelCallback(SudokuGameController sudokuGameController) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                long timerSeconds = sudokuGameController.getTimerSeconds();
+
+                long timerSecondsMod = timerSeconds % SECONDS_IN_MINUTE;
+                long timerMinutes = timerSeconds / SECONDS_IN_MINUTE;
+
+                timerLabel.setText(
+                        "Time: " + String.format("%02d", timerMinutes) + ":" + String.format("%02d", timerSecondsMod));
+            }
+        };
     }
 
     private void initUI() {
@@ -101,7 +124,7 @@ public class GameWindow extends JFrame {
         difficultyLabel.setFont(new Font("Arial", Font.BOLD, 18));
         topPanel.add(difficultyLabel, BorderLayout.CENTER);
 
-        attemptsLabel = new JLabel("Attempts: 0 / 3");
+        attemptsLabel = new JLabel("Attempts: 0 / " + this.sudokuGameController.getMaxAttempts());
         attemptsLabel.setFont(new Font("Arial", Font.BOLD, 16));
         topPanel.add(attemptsLabel, BorderLayout.EAST);
 
@@ -165,6 +188,8 @@ public class GameWindow extends JFrame {
                         selectCell(r, c);
                     }
                 });
+
+                cell.addKeyListener(getGameKeyListener());
 
                 cells[row][column] = cell;
                 addGridComponent(sudokuPanel, cell, column + 1, row + 1);
@@ -280,46 +305,66 @@ public class GameWindow extends JFrame {
     }
 
     private void onNumberButtonClick(int value) {
+        if (this.gameOver) {
+            return;
+        }
+
         if (selectedRow != -1 && selectedColumn != -1) {
-            setCellValue(selectedRow, selectedColumn, value);
-            incrementAttempts();
+            int rightValue = this.solvedGameField.getCellValue(this.selectedRow, this.selectedColumn);
+
+            if (this.gameField.getCellValue(selectedRow, selectedColumn) != 0) {
+                SupportFunctions.showMessage("Field not empty!");
+
+                return;
+            }
+
+            if (value != rightValue) {
+                incrementAttempts();
+
+                SupportFunctions.showMessage("Bad value!");
+            } else {
+                setCellValue(selectedRow, selectedColumn, value);
+                this.gameField.setCellValue(selectedRow, selectedColumn, value);
+            }
+
+            if (this.gameField.fieldIsSolved()) {
+                finalizeGame(true);
+            }
         } else {
             SupportFunctions.showMessage("Select field cell!");
         }
     }
 
     private void incrementAttempts() {
-        // TODO
+        this.sudokuGameController.addAttempts();
+        attemptsLabel.setText("Attempts: " + this.sudokuGameController.getAttempts() + " / "
+                + this.sudokuGameController.getMaxAttempts());
 
-        String currentText = attemptsLabel.getText();
-        int attempts = Integer.parseInt(currentText.split(": ")[1].split(" / ")[0]);
-        attempts++;
-        attemptsLabel.setText("Attempts: " + attempts + " / 3");
+        if (this.sudokuGameController.getAttempts() >= this.sudokuGameController.getMaxAttempts()) {
+            finalizeGame(false);
+        }
     }
 
     private void showHint() {
-        // TODO
+        if (this.gameOver) {
+            return;
+        }
+
+        if (this.usedHintsCount >= 1) {
+            SupportFunctions.showMessage("The hints are over!");
+            return;
+        }
+
+        int rightValue = this.solvedGameField.getCellValue(this.selectedRow, this.selectedColumn);
+
+        this.gameField.setCellValue(this.selectedRow, this.selectedColumn, rightValue);
+        setCellValue(this.selectedRow, this.selectedColumn, rightValue);
+
+        usedHintsCount++;
     }
 
     private void setDifficulty(String difficulty) {
         difficultyLabel.setText("Difficulty: " + difficulty);
-    }
-
-    private void startTimer() {
-        Timer timer = new Timer(1000, new ActionListener() {
-            private int seconds = 0;
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                seconds++;
-                int minutes = seconds / 60;
-                int secs = seconds % 60;
-
-                timerLabel.setText("Time: " + String.format("%02d", minutes) + ":" + String.format("%02d", secs));
-            }
-        });
-
-        timer.start();
     }
 
     public void create() {
@@ -327,12 +372,12 @@ public class GameWindow extends JFrame {
 
         setDifficulty(this.difficult.toString());
 
-        startTimer();
+        this.sudokuGameController.timerStart();
 
         SwingUtilities.invokeLater(() -> setVisible(true));
 
-        GameField gameField = fillGameField();
-        this.solvedGameField = solveField(gameField);
+        this.gameField = fillGameField();
+        this.solvedGameField = solveField(this.gameField);
     }
 
     private GameField fillGameField() {
@@ -364,5 +409,258 @@ public class GameWindow extends JFrame {
         solver.solve();
 
         return solvedField;
+    }
+
+    private void finalizeGame(boolean haveWin) {
+        Logger.getInstance().info("Finalize game");
+
+        this.sudokuGameController.timerStop();
+
+        this.gameOver = true;
+
+        if (haveWin) {
+            SupportFunctions.showMessage("You've won!");
+
+            this.sudokuGameController.giveRewards(this.difficult, this.user);
+        } else {
+            SupportFunctions.showMessage("Game over!");
+        }
+
+        updateStatistic(haveWin);
+        showUserState();
+    }
+
+    private void updateStatistic(boolean haveWin) {
+        Statistic statistic = user.getStatistic();
+
+        LocalDate currentDate = Instant.now().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate lastPlayDate = statistic
+                .getLastPlayDate()
+                .toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
+        long daysInGame = statistic.getDaysInGame();
+
+        if (!lastPlayDate.equals(currentDate)) {
+            daysInGame++;
+            lastPlayDate = currentDate;
+
+            statistic.setDaysInGame(daysInGame);
+            statistic.setLastPlayDate(
+                    Date.from(lastPlayDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        }
+
+        if (this.difficult.equals(GameDifficult.EASY)) {
+            if (haveWin) {
+                long easyWins = statistic.getEasyWins();
+                easyWins++;
+                statistic.setEasyWins(easyWins);
+            } else {
+                long easyLose = statistic.getEasyLose();
+                easyLose++;
+                statistic.setEasyLose(easyLose);
+            }
+        } else if (this.difficult.equals(GameDifficult.MIDDLE)) {
+            if (haveWin) {
+                long middleWins = statistic.getMiddleWins();
+                middleWins++;
+                statistic.setMiddleWins(middleWins);
+            } else {
+                long middleLose = statistic.getMiddleLose();
+                middleLose++;
+                statistic.setMiddleLose(middleLose);
+            }
+        } else if (this.difficult.equals(GameDifficult.HARD)) {
+            if (haveWin) {
+                long hardWins = statistic.getHardWins();
+                hardWins++;
+                statistic.setHardWins(hardWins);
+            } else {
+                long hardLose = statistic.getHardLose();
+                hardLose++;
+                statistic.setHardLose(hardLose);
+            }
+        }
+
+        if (haveWin) {
+            long seconds = this.sudokuGameController.getTimerSeconds();
+
+            if (this.difficult.equals(GameDifficult.EASY)) {
+                long bestEasySeconds = statistic.getEasyBestTime();
+
+                if (seconds < bestEasySeconds || bestEasySeconds == 0) {
+                    statistic.setEasyBestTime(seconds);
+                }
+            } else if (this.difficult.equals(GameDifficult.MIDDLE)) {
+                long bestMiddleSeconds = statistic.getMiddleBestTime();
+
+                if (seconds < bestMiddleSeconds || bestMiddleSeconds == 0) {
+                    statistic.setMiddleBestTime(seconds);
+                }
+            } else if (this.difficult.equals(GameDifficult.HARD)) {
+                long bestHardSeconds = statistic.getHardBestTime();
+
+                if (seconds < bestHardSeconds || bestHardSeconds == 0) {
+                    statistic.setHardBestTime(seconds);
+                }
+            }
+        }
+
+        gameOperationsController.updateUser(user);
+    }
+
+    private void showUserState() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("User ");
+        builder.append(user.getName());
+        builder.append(":\n");
+
+        builder.append("level - ");
+        builder.append(user.getLevel());
+        builder.append("\n");
+        builder.append("experience - ");
+        builder.append(user.getExperience());
+        builder.append("\n");
+        builder.append("experience to next level - ");
+        builder.append(user.getExperienceToNextLevel());
+
+        SupportFunctions.showMessage(builder.toString());
+    }
+
+    private KeyAdapter getGameKeyListener() {
+        return new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                processAnswer(e);
+
+                processHint(e);
+
+                processSelectionUp(e);
+                processSelectionDown(e);
+                processSelectionRight(e);
+                processSelectionLeft(e);
+
+                selectFirstCell();
+
+                processGameEnd(e);
+            }
+        };
+    }
+
+    private void processGameEnd(KeyEvent e) {
+        if (this.gameOver) {
+            boolean needNewRound = answerNeedNewRound();
+
+            if (needNewRound) {
+                Logger.getInstance().info("Continue game");
+
+                AdditionalGameWindows.selectGameSetting(user);
+
+                this.dispose();
+            }
+        }
+    }
+
+    private boolean answerNeedNewRound() {
+        boolean needNewRound = false;
+
+        Object[] options = {"Yes", "No"};
+
+        AtomicInteger choice = new AtomicInteger();
+
+        choice.set(JOptionPane.showOptionDialog(
+                null,
+                "Continue?",
+                "Game continue",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]));
+
+        needNewRound = choice.get() == 0;
+
+        return needNewRound;
+    }
+
+    private void processHint(KeyEvent e) {
+        if (selectedRow != -1 && selectedColumn != -1) {
+            if (e.getKeyCode() == KeyEvent.VK_H) {
+                showHint();
+            }
+        }
+    }
+
+    private void processAnswer(KeyEvent e) {
+        if (selectedRow != -1 && selectedColumn != -1) {
+            if (e.getKeyCode() == KeyEvent.VK_1) {
+                onNumberButtonClick(1);
+            } else if (e.getKeyCode() == KeyEvent.VK_2) {
+                onNumberButtonClick(2);
+            } else if (e.getKeyCode() == KeyEvent.VK_3) {
+                onNumberButtonClick(3);
+            } else if (e.getKeyCode() == KeyEvent.VK_4) {
+                onNumberButtonClick(4);
+            } else if (e.getKeyCode() == KeyEvent.VK_5) {
+                onNumberButtonClick(5);
+            } else if (e.getKeyCode() == KeyEvent.VK_6) {
+                onNumberButtonClick(6);
+            } else if (e.getKeyCode() == KeyEvent.VK_7) {
+                onNumberButtonClick(7);
+            } else if (e.getKeyCode() == KeyEvent.VK_8) {
+                onNumberButtonClick(8);
+            } else if (e.getKeyCode() == KeyEvent.VK_9) {
+                onNumberButtonClick(9);
+            }
+        }
+    }
+
+    private void processSelectionUp(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            if (selectedRow != -1 && selectedRow != 0) {
+                selectedRow--;
+
+                updateCellHighlighting();
+            }
+        }
+    }
+
+    private void processSelectionDown(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            if (selectedRow != -1 && selectedRow != 8) {
+                selectedRow++;
+
+                updateCellHighlighting();
+            }
+        }
+    }
+
+    private void processSelectionRight(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            if (selectedColumn != -1 && selectedColumn != 8) {
+                selectedColumn++;
+
+                updateCellHighlighting();
+            }
+        }
+    }
+
+    private void processSelectionLeft(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            if (selectedColumn != -1 && selectedColumn != 0) {
+                selectedColumn--;
+
+                updateCellHighlighting();
+            }
+        }
+    }
+
+    private void selectFirstCell() {
+        if (selectedRow == -1 || selectedColumn == -1) {
+            selectedRow = 1;
+            selectedColumn = 1;
+        }
     }
 }

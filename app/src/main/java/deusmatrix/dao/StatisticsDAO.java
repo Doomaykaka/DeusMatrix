@@ -2,6 +2,7 @@ package deusmatrix.dao;
 
 import deusmatrix.dao.utils.EntityDAO;
 import deusmatrix.models.Statistic;
+import deusmatrix.utils.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -17,6 +18,8 @@ public class StatisticsDAO extends EntityDAO<Statistic> {
     protected CriteriaQuery<Statistic> getSelectQuery(CriteriaBuilder builder, Long id) {
         CriteriaQuery<Statistic> preparedQuery = null;
 
+        Logger.getInstance().info("Get statistic");
+
         preparedQuery = builder.createQuery(Statistic.class);
         Root<Statistic> root = preparedQuery.from(Statistic.class);
         preparedQuery = preparedQuery.select(root);
@@ -29,6 +32,8 @@ public class StatisticsDAO extends EntityDAO<Statistic> {
     protected CriteriaQuery<Statistic> getSelectAllQuery(CriteriaBuilder builder) {
         CriteriaQuery<Statistic> preparedQuery = null;
 
+        Logger.getInstance().info("Get all statistics");
+
         preparedQuery = builder.createQuery(Statistic.class);
         Root<Statistic> root = preparedQuery.from(Statistic.class);
         preparedQuery = preparedQuery.select(root);
@@ -38,6 +43,8 @@ public class StatisticsDAO extends EntityDAO<Statistic> {
 
     @Override
     protected Statistic searchEntity(Statistic entity, EntityManager manager) {
+        Logger.getInstance().info("Search statistic");
+
         return entity == null || entity.getId() == null ? null : manager.find(Statistic.class, entity.getId());
     }
 }

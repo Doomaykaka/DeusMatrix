@@ -154,6 +154,23 @@ public class SaveLoadWindow extends JFrame {
             builder.append(user.getName());
             builder.append(":\n");
 
+            builder.append("\n");
+
+            builder.append("create date - ");
+            builder.append(user.getCreationDate());
+            builder.append("\n");
+            builder.append("level - ");
+            builder.append(user.getLevel());
+            builder.append("\n");
+            builder.append("experience - ");
+            builder.append(user.getExperience());
+            builder.append("\n");
+            builder.append("experience to next level - ");
+            builder.append(user.getExperienceToNextLevel());
+            builder.append("\n");
+
+            builder.append("\n");
+
             builder.append("last play date - ");
             builder.append(statistic.getLastPlayDate());
             builder.append("\n");

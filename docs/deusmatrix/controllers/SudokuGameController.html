@@ -106,14 +106,26 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>private <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a></code></div>
 <div class="col-second even-row-color"><code><a href="#attempts" class="member-name-link">attempts</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>private <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#gameStartTimeInMillis" class="member-name-link">gameStartTimeInMillis</a></code></div>
+<div class="col-first odd-row-color"><code>private static final double</code></div>
+<div class="col-second odd-row-color"><code><a href="#EXPERIENCE_TO_NEXT_LEVEL_MULTIPLIER" class="member-name-link">EXPERIENCE_TO_NEXT_LEVEL_MULTIPLIER</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>private <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a></code></div>
+<div class="col-first even-row-color"><code>private final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a></code></div>
 <div class="col-second even-row-color"><code><a href="#maxAttempts" class="member-name-link">maxAttempts</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>private static final long</code></div>
+<div class="col-second odd-row-color"><code><a href="#START_EXPERIENCE_TO_NEXT_LEVEL_VALUE" class="member-name-link">START_EXPERIENCE_TO_NEXT_LEVEL_VALUE</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>private <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/swing/Timer.html" title="class or interface in javax.swing" class="external-link">Timer</a></code></div>
+<div class="col-second even-row-color"><code><a href="#timer" class="member-name-link">timer</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>private static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#MILLISECONDS_IN_ONE_SECOND" class="member-name-link">MILLISECONDS_IN_ONE_SECOND</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#TIMER_DELAY" class="member-name-link">TIMER_DELAY</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>private int</code></div>
+<div class="col-second even-row-color"><code><a href="#timerSeconds" class="member-name-link">timerSeconds</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>private <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#updateCallbackFromTimer" class="member-name-link">updateCallbackFromTimer</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
@@ -145,20 +157,39 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addAttempts()" class="member-name-link">addAttempts</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../models/GameField.html" title="class in deusmatrix.models">GameField</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createGameField(deusmatrix.models.GameDifficult)" class="member-name-link">createGameField</a><wbr>(<a href="../models/GameDifficult.html" title="enum class in deusmatrix.models">GameDifficult</a>&nbsp;gameDifficult)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private long</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#calculateExperienceToNextLevel(long)" class="member-name-link">calculateExperienceToNextLevel</a><wbr>(long&nbsp;level)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../models/GameFieldSolver.html" title="class in deusmatrix.models">GameFieldSolver</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createGameFieldSolver(deusmatrix.models.GameField)" class="member-name-link">createGameFieldSolver</a><wbr>(<a href="../models/GameField.html" title="class in deusmatrix.models">GameField</a>&nbsp;gameField)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../models/GameField.html" title="class in deusmatrix.models">GameField</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createGameField(deusmatrix.models.GameDifficult)" class="member-name-link">createGameField</a><wbr>(<a href="../models/GameDifficult.html" title="enum class in deusmatrix.models">GameDifficult</a>&nbsp;gameDifficult)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../models/GameFieldSolver.html" title="class in deusmatrix.models">GameFieldSolver</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createGameFieldSolver(deusmatrix.models.GameField)" class="member-name-link">createGameFieldSolver</a><wbr>(<a href="../models/GameField.html" title="class in deusmatrix.models">GameField</a>&nbsp;gameField)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/swing/Timer.html" title="class or interface in javax.swing" class="external-link">Timer</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createGameTimer()" class="member-name-link">createGameTimer</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAttempts()" class="member-name-link">getAttempts</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startGameTimer()" class="member-name-link">startGameTimer</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMaxAttempts()" class="member-name-link">getMaxAttempts</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stopGameTimerAndGetResultInSeconds()" class="member-name-link">stopGameTimerAndGetResultInSeconds</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTimerSeconds()" class="member-name-link">getTimerSeconds</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#giveRewards(deusmatrix.models.GameDifficult,deusmatrix.models.User)" class="member-name-link">giveRewards</a><wbr>(<a href="../models/GameDifficult.html" title="enum class in deusmatrix.models">GameDifficult</a>&nbsp;difficult,
+ <a href="../models/User.html" title="class in deusmatrix.models">User</a>&nbsp;user)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setUpdateCallbackFromTimer(java.lang.Runnable)" class="member-name-link">setUpdateCallbackFromTimer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;updateCallbackFromTimer)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#timerStart()" class="member-name-link">timerStart</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#timerStop()" class="member-name-link">timerStop</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -178,12 +209,6 @@ loadScripts(document, 'script');</script>
 <h2>Field Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="gameStartTimeInMillis">
-<h3>gameStartTimeInMillis</h3>
-<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a></span>&nbsp;<span class="element-name">gameStartTimeInMillis</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="attempts">
 <h3>attempts</h3>
 <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a></span>&nbsp;<span class="element-name">attempts</span></div>
@@ -192,18 +217,64 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="maxAttempts">
 <h3>maxAttempts</h3>
-<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a></span>&nbsp;<span class="element-name">maxAttempts</span></div>
+<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a></span>&nbsp;<span class="element-name">maxAttempts</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="MILLISECONDS_IN_ONE_SECOND">
-<h3>MILLISECONDS_IN_ONE_SECOND</h3>
-<div class="member-signature"><span class="modifiers">private static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MILLISECONDS_IN_ONE_SECOND</span></div>
+<section class="detail" id="timer">
+<h3>timer</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/swing/Timer.html" title="class or interface in javax.swing" class="external-link">Timer</a></span>&nbsp;<span class="element-name">timer</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="timerSeconds">
+<h3>timerSeconds</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">timerSeconds</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="updateCallbackFromTimer">
+<h3>updateCallbackFromTimer</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a></span>&nbsp;<span class="element-name">updateCallbackFromTimer</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="TIMER_DELAY">
+<h3>TIMER_DELAY</h3>
+<div class="member-signature"><span class="modifiers">private static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">TIMER_DELAY</span></div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
 <ul class="tag-list">
-<li><a href="../../constant-values.html#deusmatrix.controllers.SudokuGameController.MILLISECONDS_IN_ONE_SECOND">Constant Field Values</a></li>
+<li><a href="../../constant-values.html#deusmatrix.controllers.SudokuGameController.TIMER_DELAY">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="START_EXPERIENCE_TO_NEXT_LEVEL_VALUE">
+<h3>START_EXPERIENCE_TO_NEXT_LEVEL_VALUE</h3>
+<div class="member-signature"><span class="modifiers">private static final</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">START_EXPERIENCE_TO_NEXT_LEVEL_VALUE</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../constant-values.html#deusmatrix.controllers.SudokuGameController.START_EXPERIENCE_TO_NEXT_LEVEL_VALUE">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="EXPERIENCE_TO_NEXT_LEVEL_MULTIPLIER">
+<h3>EXPERIENCE_TO_NEXT_LEVEL_MULTIPLIER</h3>
+<div class="member-signature"><span class="modifiers">private static final</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">EXPERIENCE_TO_NEXT_LEVEL_MULTIPLIER</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../constant-values.html#deusmatrix.controllers.SudokuGameController.EXPERIENCE_TO_NEXT_LEVEL_MULTIPLIER">Constant Field Values</a></li>
 </ul>
 </dd>
 </dl>
@@ -232,6 +303,36 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="createGameTimer()">
+<h3>createGameTimer</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/swing/Timer.html" title="class or interface in javax.swing" class="external-link">Timer</a></span>&nbsp;<span class="element-name">createGameTimer</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getTimerSeconds()">
+<h3>getTimerSeconds</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getTimerSeconds</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setUpdateCallbackFromTimer(java.lang.Runnable)">
+<h3>setUpdateCallbackFromTimer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setUpdateCallbackFromTimer</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;updateCallbackFromTimer)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="timerStart()">
+<h3>timerStart</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">timerStart</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="timerStop()">
+<h3>timerStop</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">timerStop</span>()</div>
+</section>
+</li>
+<li>
 <section class="detail" id="createGameField(deusmatrix.models.GameDifficult)">
 <h3>createGameField</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../models/GameField.html" title="class in deusmatrix.models">GameField</a></span>&nbsp;<span class="element-name">createGameField</span><wbr><span class="parameters">(<a href="../models/GameDifficult.html" title="enum class in deusmatrix.models">GameDifficult</a>&nbsp;gameDifficult)</span></div>
@@ -244,23 +345,6 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="startGameTimer()">
-<h3>startGameTimer</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">startGameTimer</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="stopGameTimerAndGetResultInSeconds()">
-<h3>stopGameTimerAndGetResultInSeconds</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">stopGameTimerAndGetResultInSeconds</span>()
-                                        throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/RuntimeException.html" title="class or interface in java.lang" class="external-link">RuntimeException</a></span></div>
-<dl class="notes">
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/RuntimeException.html" title="class or interface in java.lang" class="external-link">RuntimeException</a></code></dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="addAttempts()">
 <h3>addAttempts</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addAttempts</span>()</div>
@@ -270,6 +354,25 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getAttempts()">
 <h3>getAttempts</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getAttempts</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getMaxAttempts()">
+<h3>getMaxAttempts</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getMaxAttempts</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="giveRewards(deusmatrix.models.GameDifficult,deusmatrix.models.User)">
+<h3>giveRewards</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">giveRewards</span><wbr><span class="parameters">(<a href="../models/GameDifficult.html" title="enum class in deusmatrix.models">GameDifficult</a>&nbsp;difficult,
+ <a href="../models/User.html" title="class in deusmatrix.models">User</a>&nbsp;user)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="calculateExperienceToNextLevel(long)">
+<h3>calculateExperienceToNextLevel</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">calculateExperienceToNextLevel</span><wbr><span class="parameters">(long&nbsp;level)</span></div>
 </section>
 </li>
 </ul>
