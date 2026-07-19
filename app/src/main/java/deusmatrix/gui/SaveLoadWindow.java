@@ -25,8 +25,6 @@ public class SaveLoadWindow extends JFrame {
     private static final int HEIGHT = 450;
     private static final String WINDOW_TITLE = "Load game";
 
-    private static final int MILLISECONDS_IN_SECOND = 1000;
-
     public SaveLoadWindow(boolean runInStatisticMode) {
         this.runInStatisticMode = runInStatisticMode;
 
@@ -187,13 +185,13 @@ public class SaveLoadWindow extends JFrame {
             builder.append(statistic.getHardWins());
             builder.append("\n");
             builder.append("easy difficult best time (sec) - ");
-            builder.append(statistic.getEasyBestTime() / MILLISECONDS_IN_SECOND);
+            builder.append(statistic.getEasyBestTime());
             builder.append("\n");
             builder.append("middle difficult best time (sec) - ");
-            builder.append(statistic.getMiddleBestTime() / MILLISECONDS_IN_SECOND);
+            builder.append(statistic.getMiddleBestTime());
             builder.append("\n");
             builder.append("hard difficult best time (sec) - ");
-            builder.append(statistic.getHardBestTime() / MILLISECONDS_IN_SECOND);
+            builder.append(statistic.getHardBestTime());
             builder.append("\n");
             builder.append("easy difficult lose count - ");
             builder.append(statistic.getEasyLose());
