@@ -1,92 +1,105 @@
 package deusmatrix.models;
 
 public class GameFieldSolver {
-    private GameField gameField;
+    private final GameField gameField;
     private int solutionsFound;
-    private boolean solutionApplied;
 
     public GameFieldSolver(GameField gameField) {
+        if (gameField == null) {
+            throw new IllegalArgumentException("Game field must not be null");
+        }
         this.gameField = gameField;
     }
 
+    /**
+     * Finds the first solution and verifies that no second solution exists.
+     * The field is left with the first solution when at least one exists.
+     */
     public boolean solve() {
-        solutionsFound = 0;
-        solutionApplied = false;
+        GameField original = gameField.clone();
+        if (!findFirstSolution(gameField)) {
+            solutionsFound = 0;
+            return false;
+        }
 
-        backtrack();
-
-        return solutionsFound == 1 && solutionApplied;
+        solutionsFound = countSolutions(original, 2);
+        return solutionsFound == 1;
     }
 
-    private void backtrack() {
-        int row = -1;
-        int column = -1;
-        boolean hasEmpty = false;
+    public int getSolutionsFound() {
+        return solutionsFound;
+    }
 
-        outer:
-        for (int i = 0; i < GameField.FIELD_SIZE; i++) {
-            for (int j = 0; j < GameField.FIELD_SIZE; j++) {
-                if (gameField.getCellValue(i, j) == GameField.FIELD_EMPTY_VALUE) {
-                    row = i;
-                    column = j;
-                    hasEmpty = true;
-                    break outer;
+    private boolean findFirstSolution(GameField field) {
+        int[] emptyCell = findEmptyCell(field);
+        if (emptyCell == null) {
+            return true;
+        }
+
+        int row = emptyCell[0];
+        int column = emptyCell[1];
+        for (int value = 1; value <= GameField.FIELD_SIZE; value++) {
+            if (isValidMove(field, row, column, value)) {
+                field.setCellValue(row, column, value);
+                if (findFirstSolution(field)) {
+                    return true;
                 }
+                field.setCellValue(row, column, GameField.FIELD_EMPTY_VALUE);
             }
         }
 
-        if (!hasEmpty) {
-            solutionsFound++;
-            if (!solutionApplied) {
-                solutionApplied = true;
-            }
-            return;
-        }
-
-        if (solutionsFound > 1) {
-            return;
-        }
-
-        makeStepAndGoToNextStep(row, column);
+        return false;
     }
 
-    private void makeStepAndGoToNextStep(int row, int column) {
-        for (int num = 1; num <= GameField.FIELD_SIZE; num++) {
-            if (isValidMove(row, column, num)) {
-                gameField.setCellValue(row, column, num);
-                backtrack();
+    private int countSolutions(GameField field, int limit) {
+        int[] emptyCell = findEmptyCell(field);
+        if (emptyCell == null) {
+            return 1;
+        }
 
-                if (!solutionApplied) {
-                    gameField.setCellValue(row, column, GameField.FIELD_EMPTY_VALUE);
-                } else {
-                    return;
-                }
+        int row = emptyCell[0];
+        int column = emptyCell[1];
+        int count = 0;
+        for (int value = 1; value <= GameField.FIELD_SIZE && count < limit; value++) {
+            if (isValidMove(field, row, column, value)) {
+                field.setCellValue(row, column, value);
+                count += countSolutions(field, limit - count);
+                field.setCellValue(row, column, GameField.FIELD_EMPTY_VALUE);
+            }
+        }
 
-                if (solutionsFound > 1) {
-                    return;
+        return count;
+    }
+
+    private int[] findEmptyCell(GameField field) {
+        for (int row = 0; row < GameField.FIELD_SIZE; row++) {
+            for (int column = 0; column < GameField.FIELD_SIZE; column++) {
+                if (field.getCellValue(row, column) == GameField.FIELD_EMPTY_VALUE) {
+                    return new int[] {row, column};
                 }
             }
         }
+        return null;
     }
 
-    private boolean isValidMove(int rowIndex, int columnIndex, int num) {
+    private boolean isValidMove(GameField field, int rowIndex, int columnIndex, int value) {
         for (int column = 0; column < GameField.FIELD_SIZE; column++) {
-            if (gameField.getCellValue(rowIndex, column) == num) {
+            if (field.getCellValue(rowIndex, column) == value) {
                 return false;
             }
         }
 
         for (int row = 0; row < GameField.FIELD_SIZE; row++) {
-            if (gameField.getCellValue(row, columnIndex) == num) {
+            if (field.getCellValue(row, columnIndex) == value) {
                 return false;
             }
         }
 
         int blockRow = (rowIndex / GameField.BLOCKS_IN_LINE_COUNT) * GameField.NUMS_IN_BLOCK_COUNT;
         int blockColumn = (columnIndex / GameField.BLOCKS_IN_LINE_COUNT) * GameField.NUMS_IN_BLOCK_COUNT;
-        for (int i = 0; i < GameField.NUMS_IN_BLOCK_COUNT; i++) {
-            for (int j = 0; j < GameField.NUMS_IN_BLOCK_COUNT; j++) {
-                if (gameField.getCellValue(blockRow + i, blockColumn + j) == num) {
+        for (int row = blockRow; row < blockRow + GameField.NUMS_IN_BLOCK_COUNT; row++) {
+            for (int column = blockColumn; column < blockColumn + GameField.NUMS_IN_BLOCK_COUNT; column++) {
+                if (field.getCellValue(row, column) == value) {
                     return false;
                 }
             }

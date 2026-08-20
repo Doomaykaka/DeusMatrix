@@ -6,6 +6,7 @@ import deusmatrix.models.GameDifficult;
 import deusmatrix.models.User;
 import deusmatrix.utils.HibernateConfiguration;
 import deusmatrix.utils.Logger;
+import deusmatrix.utils.SupportFunctions;
 import javax.swing.*;
 
 public class AdditionalGameWindows {
@@ -21,7 +22,12 @@ public class AdditionalGameWindows {
 
                 GameOperationsController controller = getGameOperationsController();
 
-                selectGameSetting(controller.createNewUser(name));
+                User user = controller.createNewUser(name);
+                if (user != null) {
+                    selectGameSetting(user);
+                } else {
+                    SupportFunctions.showMessage("Failed to create user");
+                }
             }
         });
     }
@@ -69,9 +75,7 @@ public class AdditionalGameWindows {
         }
 
         UsersDAO usersDAO = new UsersDAO(HibernateConfiguration.getEntityManagerFactory());
-        StatisticsDAO statisticsDAO = new StatisticsDAO(HibernateConfiguration.getEntityManagerFactory());
-
-        gameOperationsController = new GameOperationsController(usersDAO, statisticsDAO);
+        gameOperationsController = new GameOperationsController(usersDAO);
 
         return gameOperationsController;
     }

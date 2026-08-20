@@ -110,6 +110,8 @@ public class MenuWindow extends JFrame {
                         System.exit(0);
                     }
                     break;
+                default:
+                    break;
             }
         };
 
