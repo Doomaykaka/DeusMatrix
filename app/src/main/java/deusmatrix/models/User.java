@@ -2,7 +2,19 @@ package deusmatrix.models;
 
 import java.util.Date;
 import java.util.Objects;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -22,6 +34,7 @@ public class User {
     private String name;
 
     @NotNull @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
 
     @NotNull @Column(nullable = false)
@@ -33,7 +46,8 @@ public class User {
     @NotNull @Column(nullable = false)
     private long experienceToNextLevel;
 
-    @NotNull @OneToOne
+    @NotNull @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "statistic_id", nullable = false, unique = true)
     private Statistic statistic;
 
     public User() {}
@@ -45,9 +59,7 @@ public class User {
             long experience,
             long experienceToNextLevel,
             Statistic statistic) {
-        final Long DEFAULT_ID = null;
-
-        this.id = DEFAULT_ID;
+        this.id = null;
         this.name = name;
         this.creationDate = creationDate;
         this.level = level;
@@ -114,19 +126,18 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         User user = (User) o;
-        return level == user.level
-                && experience == user.experience
-                && experienceToNextLevel == user.experienceToNextLevel
-                && Objects.equals(id, user.id)
-                && Objects.equals(name, user.name)
-                && Objects.equals(creationDate, user.creationDate)
-                && Objects.equals(statistic, user.statistic);
+        return id != null && Objects.equals(id, user.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, creationDate, level, experience, experienceToNextLevel, statistic);
+        return getClass().hashCode();
     }
 }

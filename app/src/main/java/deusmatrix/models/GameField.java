@@ -3,6 +3,7 @@ package deusmatrix.models;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class GameField implements Cloneable {
@@ -28,9 +29,13 @@ public class GameField implements Cloneable {
     };
 
     public GameField(GameDifficult difficult) {
+        this(difficult, new Random());
+    }
+
+    public GameField(GameDifficult difficult, Random random) {
         this.field = new int[FIELD_SIZE][FIELD_SIZE];
-        this.difficult = difficult;
-        this.random = new Random();
+        this.difficult = Objects.requireNonNull(difficult, "difficult");
+        this.random = Objects.requireNonNull(random, "random");
 
         generateGame(difficult);
     }
@@ -223,23 +228,63 @@ public class GameField implements Cloneable {
     public boolean fieldIsSolved() {
         for (int row = 0; row < FIELD_SIZE; row++) {
             for (int column = 0; column < FIELD_SIZE; column++) {
-                if (field[row][column] == FIELD_EMPTY_VALUE) return false;
+                int value = field[row][column];
+                if (value == FIELD_EMPTY_VALUE || !isValidMove(row, column, value)) {
+                    return false;
+                }
             }
         }
         return true;
     }
 
     public void setCellValue(int row, int col, int value) {
+        validateCoordinates(row, col);
+        if (value < FIELD_EMPTY_VALUE || value > FIELD_SIZE) {
+            throw new IllegalArgumentException("Cell value must be between 0 and 9");
+        }
         field[row][col] = value;
     }
 
     public int getCellValue(int row, int col) {
+        validateCoordinates(row, col);
         return field[row][col];
     }
 
     @Override
-    public GameField clone() throws CloneNotSupportedException {
+    public GameField clone() {
         return cloneField();
+    }
+
+    private boolean isValidMove(int rowIndex, int columnIndex, int value) {
+        for (int column = 0; column < FIELD_SIZE; column++) {
+            if (column != columnIndex && field[rowIndex][column] == value) {
+                return false;
+            }
+        }
+
+        for (int row = 0; row < FIELD_SIZE; row++) {
+            if (row != rowIndex && field[row][columnIndex] == value) {
+                return false;
+            }
+        }
+
+        int blockRow = (rowIndex / BLOCKS_IN_LINE_COUNT) * NUMS_IN_BLOCK_COUNT;
+        int blockColumn = (columnIndex / BLOCKS_IN_LINE_COUNT) * NUMS_IN_BLOCK_COUNT;
+        for (int row = blockRow; row < blockRow + NUMS_IN_BLOCK_COUNT; row++) {
+            for (int column = blockColumn; column < blockColumn + NUMS_IN_BLOCK_COUNT; column++) {
+                if ((row != rowIndex || column != columnIndex) && field[row][column] == value) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private void validateCoordinates(int row, int column) {
+        if (row < 0 || row >= FIELD_SIZE || column < 0 || column >= FIELD_SIZE) {
+            throw new IndexOutOfBoundsException("Cell coordinates are outside the field");
+        }
     }
 
     @Override

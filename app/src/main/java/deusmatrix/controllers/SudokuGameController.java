@@ -69,7 +69,7 @@ public class SudokuGameController {
     public void addAttempts() {
         Logger.getInstance().info("Add game attempt");
 
-        if (attempts <= maxAttempts) {
+        if (attempts < maxAttempts) {
             attempts++;
         }
     }
@@ -83,7 +83,7 @@ public class SudokuGameController {
     }
 
     public void giveRewards(GameDifficult difficult, User user) {
-        long gameTime = getTimerSeconds();
+        long gameTime = Math.max(1, getTimerSeconds());
         long additionalExperience =
                 (START_EXPERIENCE_TO_NEXT_LEVEL_VALUE * difficult.getNumsCountToRemove()) / gameTime;
 
@@ -93,7 +93,7 @@ public class SudokuGameController {
         if (additionalExperience > 0) {
             long experienceToNextLevel = user.getExperienceToNextLevel();
 
-            while (currentExperience > experienceToNextLevel) {
+            while (currentExperience >= experienceToNextLevel) {
                 experienceToNextLevel = calculateExperienceToNextLevel(currentLevel + 1);
                 currentLevel++;
             }

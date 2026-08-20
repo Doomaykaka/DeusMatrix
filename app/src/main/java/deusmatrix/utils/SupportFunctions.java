@@ -7,6 +7,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 import java.util.*;
 import java.util.List;
@@ -50,21 +54,25 @@ public class SupportFunctions {
                 hardLose);
     }
 
-    public static void writeContentInNewFile(File folderToSave, String name, List<String> content) {
+    public static boolean writeContentInNewFile(File folderToSave, String name, List<String> content) {
         try {
-            File file = new File(folderToSave, name);
-
-            if (file.createNewFile()) {
-                FileWriter writer = new FileWriter(file);
-
-                for (String line : content) {
-                    writer.append(line + System.lineSeparator());
-                }
-
-                writer.close();
+            if (folderToSave == null || name == null || content == null) {
+                return false;
             }
-        } catch (NullPointerException | IOException e) {
-            System.out.println("Error: save file problems");
+
+            Path file = folderToSave.toPath().resolve(name).normalize();
+            String value = String.join(System.lineSeparator(), content) + System.lineSeparator();
+            Files.writeString(
+                    file,
+                    value,
+                    StandardCharsets.UTF_8,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING,
+                    StandardOpenOption.WRITE);
+            return true;
+        } catch (IOException | RuntimeException e) {
+            Logger.getInstance().warning("Can't save file: " + e.getMessage());
+            return false;
         }
     }
 
@@ -179,14 +187,9 @@ public class SupportFunctions {
     }
 
     public static File saveFile() {
-        File selectedFile = null;
-
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.showSaveDialog(null);
-        selectedFile = fileChooser.getSelectedFile();
-
-        return selectedFile;
+        return fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION ? fileChooser.getSelectedFile() : null;
     }
 
     public static MouseListener getOnClickListener(Runnable callback) {
@@ -198,22 +201,22 @@ public class SupportFunctions {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                ;
+                return;
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                ;
+                return;
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                ;
+                return;
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ;
+                return;
             }
         };
     }

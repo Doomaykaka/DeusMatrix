@@ -24,6 +24,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -52,6 +53,8 @@ public class GameWindow extends JFrame {
     private int usedHintsCount = 0;
 
     private boolean gameOver;
+    private boolean gameReady;
+    private boolean continuePromptShown;
 
     private static final int SECONDS_IN_MINUTE = 60;
     private static final int MILLISECONDS_IN_SECOND = 1000;
@@ -60,6 +63,8 @@ public class GameWindow extends JFrame {
         this.user = user;
         this.difficult = difficult;
         this.gameOver = false;
+        this.gameReady = false;
+        this.continuePromptShown = false;
 
         initController();
         initUI();
@@ -74,8 +79,6 @@ public class GameWindow extends JFrame {
         sudokuGameController = new SudokuGameController();
         Runnable updateCallbackFromTimer = createUpdateTimerLabelCallback(sudokuGameController);
         sudokuGameController.setUpdateCallbackFromTimer(updateCallbackFromTimer);
-
-        sudokuGameController.timerStart();
     }
 
     private Runnable createUpdateTimerLabelCallback(SudokuGameController sudokuGameController) {
@@ -305,7 +308,7 @@ public class GameWindow extends JFrame {
     }
 
     private void onNumberButtonClick(int value) {
-        if (this.gameOver) {
+        if (this.gameOver || !this.gameReady) {
             return;
         }
 
@@ -346,7 +349,17 @@ public class GameWindow extends JFrame {
     }
 
     private void showHint() {
-        if (this.gameOver) {
+        if (this.gameOver || !this.gameReady) {
+            return;
+        }
+
+        if (selectedRow == -1 || selectedColumn == -1) {
+            SupportFunctions.showMessage("Select field cell!");
+            return;
+        }
+
+        if (this.gameField.getCellValue(selectedRow, selectedColumn) != GameField.FIELD_EMPTY_VALUE) {
+            SupportFunctions.showMessage("Field not empty!");
             return;
         }
 
@@ -372,43 +385,52 @@ public class GameWindow extends JFrame {
 
         setDifficulty(this.difficult.toString());
 
-        this.sudokuGameController.timerStart();
+        setVisible(true);
 
-        SwingUtilities.invokeLater(() -> setVisible(true));
+        new SwingWorker<GameField[], Void>() {
+            @Override
+            protected GameField[] doInBackground() {
+                GameField generatedField = sudokuGameController.createGameField(difficult);
+                GameField solvedField = generatedField.clone();
+                sudokuGameController.createGameFieldSolver(solvedField).solve();
+                return new GameField[] {generatedField, solvedField};
+            }
 
-        this.gameField = fillGameField();
-        this.solvedGameField = solveField(this.gameField);
+            @Override
+            protected void done() {
+                try {
+                    GameField[] fields = get();
+                    gameField = fields[0];
+                    solvedGameField = fields[1];
+                    displayGameField();
+                    gameReady = true;
+                    sudokuGameController.timerStart();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    handleGameCreationFailure(e);
+                } catch (ExecutionException e) {
+                    handleGameCreationFailure(e.getCause());
+                }
+            }
+        }.execute();
     }
 
-    private GameField fillGameField() {
-        GameField gameField = sudokuGameController.createGameField(difficult);
-
+    private void displayGameField() {
         for (int row = 0; row < GameField.FIELD_SIZE; row++) {
             for (int column = 0; column < GameField.FIELD_SIZE; column++) {
-                int cellValue = gameField.getCellValue(row, column);
+                int cellValue = this.gameField.getCellValue(row, column);
 
                 if (cellValue != GameField.FIELD_EMPTY_VALUE) {
                     setCellValue(row, column, cellValue);
                 }
             }
         }
-
-        return gameField;
     }
 
-    private GameField solveField(GameField gameField) {
-        GameField solvedField = null;
-
-        try {
-            solvedField = gameField.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-
-        GameFieldSolver solver = sudokuGameController.createGameFieldSolver(solvedField);
-        solver.solve();
-
-        return solvedField;
+    private void handleGameCreationFailure(Throwable failure) {
+        Logger.getInstance().warning("Can't create game: " + failure.getMessage());
+        SupportFunctions.showMessage("Failed to create game");
+        dispose();
     }
 
     private void finalizeGame(boolean haveWin) {
@@ -417,6 +439,7 @@ public class GameWindow extends JFrame {
         this.sudokuGameController.timerStop();
 
         this.gameOver = true;
+        this.gameReady = false;
 
         if (haveWin) {
             SupportFunctions.showMessage("You've won!");
@@ -550,7 +573,8 @@ public class GameWindow extends JFrame {
     }
 
     private void processGameEnd(KeyEvent e) {
-        if (this.gameOver) {
+        if (this.gameOver && !continuePromptShown) {
+            continuePromptShown = true;
             boolean needNewRound = answerNeedNewRound();
 
             if (needNewRound) {
@@ -659,8 +683,9 @@ public class GameWindow extends JFrame {
 
     private void selectFirstCell() {
         if (selectedRow == -1 || selectedColumn == -1) {
-            selectedRow = 1;
-            selectedColumn = 1;
+            selectedRow = 0;
+            selectedColumn = 0;
+            updateCellHighlighting();
         }
     }
 }

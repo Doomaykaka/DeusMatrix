@@ -30,7 +30,7 @@ public class Logger {
     }
 
     public synchronized void info(String message) {
-        if (!ApplicationConfigReader.getLastConfig().getLogApp()) {
+        if (!isLoggingEnabled()) {
             return;
         }
 
@@ -67,12 +67,14 @@ public class Logger {
             printWriter.write("INFO - " + message + NEW_LINE);
         }
 
-        printWriter.close();
+        if (printWriter != null) {
+            printWriter.close();
+        }
         printWriter = null;
     }
 
     public synchronized void warning(String message) {
-        if (!ApplicationConfigReader.getLastConfig().getLogApp()) {
+        if (!isLoggingEnabled()) {
             return;
         }
 
@@ -109,7 +111,9 @@ public class Logger {
             printWriter.write("WARNING - " + message + NEW_LINE);
         }
 
-        printWriter.close();
+        if (printWriter != null) {
+            printWriter.close();
+        }
         printWriter = null;
     }
 
@@ -138,9 +142,12 @@ public class Logger {
         File logFile = new File(LOG_FILENAME);
 
         if (logFile.exists() && !logFile.isDirectory()) {
-            if (!logFile.delete()) {
-                ;
-            }
+            logFile.delete();
         }
+    }
+
+    private boolean isLoggingEnabled() {
+        ApplicationConfigReader config = ApplicationConfigReader.getLastConfig();
+        return config != null && Boolean.TRUE.equals(config.getLogApp());
     }
 }

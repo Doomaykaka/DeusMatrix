@@ -1,17 +1,14 @@
 package deusmatrix.utils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.SharedCacheMode;
 import javax.persistence.ValidationMode;
@@ -21,111 +18,70 @@ import javax.persistence.spi.PersistenceUnitTransactionType;
 import javax.sql.DataSource;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.jpa.HibernatePersistenceProvider;
-import org.sqlite.SQLiteConfig;
-import org.sqlite.SQLiteDataSource;
 
 public class HibernateConfiguration {
     private static EntityManagerFactory entityManagerFactory;
-    private static EntityManager entityManager;
     private static ApplicationConfigReader configReader;
 
     private static String lastUsedConnectionURL;
 
     private static final String DB_URL_PREFIX = "jdbc:";
-    private static final String DIALECT_NAME = "nail.gun.configurations.SQLiteDialect";
     private static final String PERSISTENCE_PROVIDER_NAME = "org.hibernate.jpa.HibernatePersistenceProvider";
-    private static final String PERSISTENCE_UNIT_NAME = "NailGun";
+    private static final String PERSISTENCE_UNIT_NAME = "DeusMatrix";
     private static final String SQLITE_DB_TYPE = "sqlite";
 
-    private static final String DEFAULT_DB_PARENT_FOLDER_NAME = "user.dir";
-
-    private static final String DB_URL_ADDRESS_SEPARATOR = "://";
-
-    private static final String DOT = ".";
-    private static final String SLASH = "/";
-    private static final String EMPTY = "";
+    private static final String DB_URL_ADDRESS_SEPARATOR = ":";
 
     private HibernateConfiguration() {}
 
-    private static List<Class> entities = new ArrayList<Class>() {};
+    private static final List<Class<?>> ENTITY_CLASSES = new ArrayList<>();
 
     public static EntityManagerFactory getEntityManagerFactory() {
         return entityManagerFactory;
     }
 
-    public static EntityManager getEntityManager() {
-        return entityManager;
-    }
-
     public static void shutdown() {
-        if (entityManager != null) {
-            entityManager.close();
-        }
         if (entityManagerFactory != null) {
             entityManagerFactory.close();
+            entityManagerFactory = null;
         }
     }
 
     public static void build(ApplicationConfigReader inputConfigReader) {
+        shutdown();
         configReader = inputConfigReader;
 
         lastUsedConnectionURL = buildDatabaseUrl(inputConfigReader);
 
+        HashMap<String, Object> settings = new HashMap<>();
+        settings.put(AvailableSettings.DRIVER, configReader.getDbDriver());
+        settings.put(AvailableSettings.URL, lastUsedConnectionURL);
+        settings.put(AvailableSettings.DIALECT, CustomSQLiteDialect.class);
+        settings.put(AvailableSettings.SHOW_SQL, false);
+        settings.put(AvailableSettings.QUERY_STARTUP_CHECKING, false);
+        settings.put(AvailableSettings.USER, configReader.getDbUser());
+        settings.put(AvailableSettings.PASS, configReader.getDbPassword());
+        settings.put(AvailableSettings.GENERATE_STATISTICS, false);
+        settings.put(AvailableSettings.USE_REFLECTION_OPTIMIZER, false);
+        settings.put(AvailableSettings.USE_SECOND_LEVEL_CACHE, false);
+        settings.put(AvailableSettings.USE_QUERY_CACHE, false);
+        settings.put(AvailableSettings.USE_STRUCTURED_CACHE, false);
+        settings.put(AvailableSettings.STATEMENT_BATCH_SIZE, 20);
+        settings.put(AvailableSettings.HBM2DDL_AUTO, configReader.getDbUsingType());
+
         entityManagerFactory = new HibernatePersistenceProvider()
-                .createContainerEntityManagerFactory(
-                        archiverPersistenceUnitInfo(inputConfigReader), new HashMap<String, Object>() {
-                            {
-                                put(AvailableSettings.DRIVER, configReader.getDbDriver());
-                                put(AvailableSettings.URL, lastUsedConnectionURL);
-
-                                put(AvailableSettings.DIALECT, CustomSQLiteDialect.class);
-                                put(AvailableSettings.SHOW_SQL, false);
-                                put(AvailableSettings.QUERY_STARTUP_CHECKING, false);
-
-                                put(AvailableSettings.USER, configReader.getDbUser());
-                                put(AvailableSettings.PASS, configReader.getDbPassword());
-
-                                put(AvailableSettings.GENERATE_STATISTICS, false);
-                                put(AvailableSettings.USE_REFLECTION_OPTIMIZER, false);
-                                put(AvailableSettings.USE_SECOND_LEVEL_CACHE, false);
-                                put(AvailableSettings.USE_QUERY_CACHE, false);
-                                put(AvailableSettings.USE_STRUCTURED_CACHE, false);
-                                put(AvailableSettings.STATEMENT_BATCH_SIZE, 20);
-
-                                put(AvailableSettings.HBM2DDL_AUTO, configReader.getDbUsingType());
-                            }
-                        });
-
-        entityManager = entityManagerFactory.createEntityManager();
+                .createContainerEntityManagerFactory(persistenceUnitInfo(inputConfigReader), settings);
     }
 
     private static String buildDatabaseUrl(ApplicationConfigReader inputConfigReader) {
-        String databaseURL = EMPTY;
-
-        String dbAddress = configReader.getDbAddress();
-
-        if (dbAddress.startsWith(DOT)) {
-            File databaseDir = new File(System.getProperty(DEFAULT_DB_PARENT_FOLDER_NAME));
-
-            dbAddress = Paths.get(databaseDir.getAbsolutePath(), dbAddress.substring(2))
-                    .toString();
+        if (!SQLITE_DB_TYPE.equals(inputConfigReader.getDbType())) {
+            throw new IllegalArgumentException("Only SQLite is supported");
         }
 
-        databaseURL += DB_URL_PREFIX;
-        databaseURL += inputConfigReader.getDbType();
-        databaseURL += DB_URL_ADDRESS_SEPARATOR;
-        databaseURL += dbAddress;
-
-        if (!configReader.getDbType().equals(SQLITE_DB_TYPE)) {
-            databaseURL += configReader.getDbPort();
-            databaseURL += SLASH;
-            databaseURL += configReader.getDbName();
-        }
-
-        return databaseURL;
+        return DB_URL_PREFIX + SQLITE_DB_TYPE + DB_URL_ADDRESS_SEPARATOR + inputConfigReader.getDbAddress();
     }
 
-    private static PersistenceUnitInfo archiverPersistenceUnitInfo(ApplicationConfigReader inputConfigReader) {
+    private static PersistenceUnitInfo persistenceUnitInfo(ApplicationConfigReader inputConfigReader) {
         return new HibernatePersistenceUnitInfo(inputConfigReader);
     }
 
@@ -135,28 +91,20 @@ public class HibernateConfiguration {
         properties.put(AvailableSettings.HBM2DDL_AUTO, configReader.getDbUsingType());
         properties.put(AvailableSettings.SHOW_SQL, true);
         properties.put(AvailableSettings.DRIVER, configReader.getDbDriver());
-        properties.put(AvailableSettings.DIALECT, DIALECT_NAME);
-        properties.put(AvailableSettings.DATASOURCE, dataSource(inputConfigReader));
+        properties.put(AvailableSettings.URL, buildDatabaseUrl(inputConfigReader));
+        properties.put(AvailableSettings.DIALECT, CustomSQLiteDialect.class);
 
         return properties;
     }
 
-    private static DataSource dataSource(ApplicationConfigReader inputConfigReader) {
-        final SQLiteDataSource dataSource = new SQLiteDataSource();
-
-        dataSource.setUrl(buildDatabaseUrl(inputConfigReader));
-        dataSource.setJournalMode(SQLiteConfig.JournalMode.WAL.getValue());
-        dataSource.setLockingMode(SQLiteConfig.LockingMode.NORMAL.getValue());
-
-        return dataSource;
-    }
-
     private static List<String> entityClassNames() {
-        return entities.stream().map(Class::getName).collect(Collectors.toList());
+        return ENTITY_CLASSES.stream().map(Class::getName).collect(Collectors.toList());
     }
 
-    public static void addEntity(Class entityClass) {
-        entities.add(entityClass);
+    public static void addEntity(Class<?> entityClass) {
+        if (!ENTITY_CLASSES.contains(entityClass)) {
+            ENTITY_CLASSES.add(entityClass);
+        }
     }
 
     public static String getLastUsedConnectionURL() {
@@ -170,7 +118,7 @@ public class HibernateConfiguration {
     private static class HibernatePersistenceUnitInfo implements PersistenceUnitInfo {
         private ApplicationConfigReader configReader;
 
-        public HibernatePersistenceUnitInfo(ApplicationConfigReader inputConfigReader) {
+        HibernatePersistenceUnitInfo(ApplicationConfigReader inputConfigReader) {
             configReader = inputConfigReader;
         }
 
