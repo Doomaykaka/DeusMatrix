@@ -241,9 +241,7 @@ public class SaveLoadWindow extends JFrame {
 
     private void initController() {
         UsersDAO usersDAO = new UsersDAO(HibernateConfiguration.getEntityManagerFactory());
-        StatisticsDAO statisticsDAO = new StatisticsDAO(HibernateConfiguration.getEntityManagerFactory());
-
-        gameOperationsController = new GameOperationsController(usersDAO, statisticsDAO);
+        gameOperationsController = new GameOperationsController(usersDAO);
     }
 
     private void loadUsers() {

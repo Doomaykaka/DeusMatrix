@@ -1,6 +1,5 @@
 package deusmatrix.controllers;
 
-import deusmatrix.dao.StatisticsDAO;
 import deusmatrix.dao.UsersDAO;
 import deusmatrix.models.Statistic;
 import deusmatrix.models.User;
@@ -15,24 +14,15 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Consumer;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class GameOperationsController {
     private final UsersDAO usersDAO;
-    private final StatisticsDAO statisticsDAO;
-    private final EntityManagerFactory entityManagerFactory;
 
-    public GameOperationsController(UsersDAO usersDAO, StatisticsDAO statisticsDAO) {
+    public GameOperationsController(UsersDAO usersDAO) {
         this.usersDAO = usersDAO;
-        this.statisticsDAO = statisticsDAO;
-        this.entityManagerFactory = usersDAO.getEntityManagerFactory();
     }
 
     public List<User> getAllUsers() {
@@ -43,12 +33,12 @@ public class GameOperationsController {
 
     public boolean saveUser(User user) {
         Logger.getInstance().info("Save user");
-        return executeTransaction(manager -> manager.persist(user));
+        return usersDAO.create(user);
     }
 
     public boolean updateUser(User user) {
         Logger.getInstance().info("Update user");
-        return executeTransaction(manager -> manager.merge(user));
+        return usersDAO.update(user);
     }
 
     public User createNewUser(String name) {
@@ -60,13 +50,7 @@ public class GameOperationsController {
 
     public boolean removeUser(Long id) {
         Logger.getInstance().info("Remove user");
-        return executeTransaction(manager -> {
-            User user = manager.find(User.class, id);
-            if (user == null) {
-                throw new IllegalArgumentException("User does not exist");
-            }
-            manager.remove(user);
-        });
+        return usersDAO.remove(usersDAO.get(id));
     }
 
     public boolean exportUser(User user, File fileToSave) {
@@ -190,33 +174,5 @@ public class GameOperationsController {
 
     private Date dateFromSeconds(long seconds) {
         return new Date(Math.multiplyExact(seconds, Constants.SECONDS_TO_MILLIS_MULTIPLIER));
-    }
-
-    private boolean executeTransaction(Consumer<EntityManager> operation) {
-        if (entityManagerFactory == null) {
-            Logger.getInstance().warning("Entity manager factory is not configured");
-            return false;
-        }
-
-        EntityManager manager = null;
-        EntityTransaction transaction = null;
-        try {
-            manager = entityManagerFactory.createEntityManager();
-            transaction = manager.getTransaction();
-            transaction.begin();
-            operation.accept(manager);
-            transaction.commit();
-            return true;
-        } catch (PersistenceException | IllegalArgumentException e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            Logger.getInstance().warning("Can't execute user transaction: " + e.getMessage());
-            return false;
-        } finally {
-            if (manager != null && manager.isOpen()) {
-                manager.close();
-            }
-        }
     }
 }

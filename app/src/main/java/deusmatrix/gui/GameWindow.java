@@ -2,7 +2,6 @@ package deusmatrix.gui;
 
 import deusmatrix.controllers.GameOperationsController;
 import deusmatrix.controllers.SudokuGameController;
-import deusmatrix.dao.StatisticsDAO;
 import deusmatrix.dao.UsersDAO;
 import deusmatrix.models.*;
 import deusmatrix.utils.HibernateConfiguration;
@@ -72,9 +71,7 @@ public class GameWindow extends JFrame {
 
     private void initController() {
         UsersDAO usersDAO = new UsersDAO(HibernateConfiguration.getEntityManagerFactory());
-        StatisticsDAO statisticsDAO = new StatisticsDAO(HibernateConfiguration.getEntityManagerFactory());
-
-        gameOperationsController = new GameOperationsController(usersDAO, statisticsDAO);
+        gameOperationsController = new GameOperationsController(usersDAO);
 
         sudokuGameController = new SudokuGameController();
         Runnable updateCallbackFromTimer = createUpdateTimerLabelCallback(sudokuGameController);

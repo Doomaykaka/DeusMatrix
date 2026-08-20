@@ -75,9 +75,7 @@ public class AdditionalGameWindows {
         }
 
         UsersDAO usersDAO = new UsersDAO(HibernateConfiguration.getEntityManagerFactory());
-        StatisticsDAO statisticsDAO = new StatisticsDAO(HibernateConfiguration.getEntityManagerFactory());
-
-        gameOperationsController = new GameOperationsController(usersDAO, statisticsDAO);
+        gameOperationsController = new GameOperationsController(usersDAO);
 
         return gameOperationsController;
     }
