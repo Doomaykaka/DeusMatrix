@@ -34,6 +34,8 @@ public class GameWindow extends JFrame {
     private SudokuGameController sudokuGameController;
     private GameOperationsController gameOperationsController;
 
+    private DraftWindow draftWindow;
+
     private GameField gameField;
     private GameField solvedGameField;
 
@@ -43,6 +45,7 @@ public class GameWindow extends JFrame {
     private JPanel sudokuPanel;
     private JButton[] numberButtons;
     private JButton hintButton;
+    private JButton draftButton;
 
     private JButton[][] cells = new JButton[GameField.FIELD_SIZE][GameField.FIELD_SIZE];
 
@@ -211,6 +214,10 @@ public class GameWindow extends JFrame {
             bottomPanel.add(numberButtons[i]);
         }
 
+        draftButton = new JButton("Draft");
+        draftButton.addActionListener(e -> openDraft());
+        bottomPanel.add(draftButton);
+
         hintButton = new JButton("Hint");
         hintButton.addActionListener(e -> showHint());
         bottomPanel.add(hintButton);
@@ -370,6 +377,11 @@ public class GameWindow extends JFrame {
         if (this.sudokuGameController.getAttempts() >= this.sudokuGameController.getMaxAttempts()) {
             finalizeGame(false);
         }
+    }
+
+    private void openDraft() {
+        draftWindow = new DraftWindow(this, gameField);
+        draftWindow.setVisible(true);
     }
 
     private void showHint() {

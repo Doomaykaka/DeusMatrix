@@ -158,6 +158,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>private <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/swing/JLabel.html" title="class or interface in javax.swing" class="external-link">JLabel</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#difficultyLabel" class="member-name-link">difficultyLabel</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>private <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/swing/JButton.html" title="class or interface in javax.swing" class="external-link">JButton</a></code></div>
+<div class="col-second even-row-color"><code><a href="#draftButton" class="member-name-link">draftButton</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>private <a href="DraftWindow.html" title="class in deusmatrix.gui">DraftWindow</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#draftWindow" class="member-name-link">draftWindow</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>private <a href="../models/GameField.html" title="class in deusmatrix.models">GameField</a></code></div>
 <div class="col-second even-row-color"><code><a href="#gameField" class="member-name-link">gameField</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -312,56 +318,59 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onNumberButtonClick(int)" class="member-name-link">onNumberButtonClick</a><wbr>(int&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#processAnswer(java.awt.event.KeyEvent)" class="member-name-link">processAnswer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/event/KeyEvent.html" title="class or interface in java.awt.event" class="external-link">KeyEvent</a>&nbsp;e)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#openDraft()" class="member-name-link">openDraft</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#processGameEnd(java.awt.event.KeyEvent)" class="member-name-link">processGameEnd</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/event/KeyEvent.html" title="class or interface in java.awt.event" class="external-link">KeyEvent</a>&nbsp;e)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#processAnswer(java.awt.event.KeyEvent)" class="member-name-link">processAnswer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/event/KeyEvent.html" title="class or interface in java.awt.event" class="external-link">KeyEvent</a>&nbsp;e)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#processHint(java.awt.event.KeyEvent)" class="member-name-link">processHint</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/event/KeyEvent.html" title="class or interface in java.awt.event" class="external-link">KeyEvent</a>&nbsp;e)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#processGameEnd(java.awt.event.KeyEvent)" class="member-name-link">processGameEnd</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/event/KeyEvent.html" title="class or interface in java.awt.event" class="external-link">KeyEvent</a>&nbsp;e)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#processSelectionDown(java.awt.event.KeyEvent)" class="member-name-link">processSelectionDown</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/event/KeyEvent.html" title="class or interface in java.awt.event" class="external-link">KeyEvent</a>&nbsp;e)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#processHint(java.awt.event.KeyEvent)" class="member-name-link">processHint</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/event/KeyEvent.html" title="class or interface in java.awt.event" class="external-link">KeyEvent</a>&nbsp;e)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#processSelectionLeft(java.awt.event.KeyEvent)" class="member-name-link">processSelectionLeft</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/event/KeyEvent.html" title="class or interface in java.awt.event" class="external-link">KeyEvent</a>&nbsp;e)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#processSelectionDown(java.awt.event.KeyEvent)" class="member-name-link">processSelectionDown</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/event/KeyEvent.html" title="class or interface in java.awt.event" class="external-link">KeyEvent</a>&nbsp;e)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#processSelectionRight(java.awt.event.KeyEvent)" class="member-name-link">processSelectionRight</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/event/KeyEvent.html" title="class or interface in java.awt.event" class="external-link">KeyEvent</a>&nbsp;e)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#processSelectionLeft(java.awt.event.KeyEvent)" class="member-name-link">processSelectionLeft</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/event/KeyEvent.html" title="class or interface in java.awt.event" class="external-link">KeyEvent</a>&nbsp;e)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#processSelectionUp(java.awt.event.KeyEvent)" class="member-name-link">processSelectionUp</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/event/KeyEvent.html" title="class or interface in java.awt.event" class="external-link">KeyEvent</a>&nbsp;e)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#processSelectionRight(java.awt.event.KeyEvent)" class="member-name-link">processSelectionRight</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/event/KeyEvent.html" title="class or interface in java.awt.event" class="external-link">KeyEvent</a>&nbsp;e)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#selectCell(int,int)" class="member-name-link">selectCell</a><wbr>(int&nbsp;row,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#processSelectionUp(java.awt.event.KeyEvent)" class="member-name-link">processSelectionUp</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/event/KeyEvent.html" title="class or interface in java.awt.event" class="external-link">KeyEvent</a>&nbsp;e)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#selectCell(int,int)" class="member-name-link">selectCell</a><wbr>(int&nbsp;row,
  int&nbsp;column)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#selectFirstCell()" class="member-name-link">selectFirstCell</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCellValue(int,int,int)" class="member-name-link">setCellValue</a><wbr>(int&nbsp;row,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#selectFirstCell()" class="member-name-link">selectFirstCell</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCellValue(int,int,int)" class="member-name-link">setCellValue</a><wbr>(int&nbsp;row,
  int&nbsp;column,
  int&nbsp;value)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDifficulty(java.lang.String)" class="member-name-link">setDifficulty</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;difficulty)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#showHint()" class="member-name-link">showHint</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDifficulty(java.lang.String)" class="member-name-link">setDifficulty</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;difficulty)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#showUserState()" class="member-name-link">showUserState</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private <a href="../models/GameField.html" title="class in deusmatrix.models">GameField</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#solveField(deusmatrix.models.GameField)" class="member-name-link">solveField</a><wbr>(<a href="../models/GameField.html" title="class in deusmatrix.models">GameField</a>&nbsp;gameField)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateCellHighlighting()" class="member-name-link">updateCellHighlighting</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#showHint()" class="member-name-link">showHint</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateStatistic(boolean)" class="member-name-link">updateStatistic</a><wbr>(boolean&nbsp;haveWin)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#showUserState()" class="member-name-link">showUserState</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private <a href="../models/GameField.html" title="class in deusmatrix.models">GameField</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#solveField(deusmatrix.models.GameField)" class="member-name-link">solveField</a><wbr>(<a href="../models/GameField.html" title="class in deusmatrix.models">GameField</a>&nbsp;gameField)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateCellHighlighting()" class="member-name-link">updateCellHighlighting</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateStatistic(boolean)" class="member-name-link">updateStatistic</a><wbr>(boolean&nbsp;haveWin)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -422,6 +431,12 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="draftWindow">
+<h3>draftWindow</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="DraftWindow.html" title="class in deusmatrix.gui">DraftWindow</a></span>&nbsp;<span class="element-name">draftWindow</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="gameField">
 <h3>gameField</h3>
 <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="../models/GameField.html" title="class in deusmatrix.models">GameField</a></span>&nbsp;<span class="element-name">gameField</span></div>
@@ -467,6 +482,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="hintButton">
 <h3>hintButton</h3>
 <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/swing/JButton.html" title="class or interface in javax.swing" class="external-link">JButton</a></span>&nbsp;<span class="element-name">hintButton</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="draftButton">
+<h3>draftButton</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/swing/JButton.html" title="class or interface in javax.swing" class="external-link">JButton</a></span>&nbsp;<span class="element-name">draftButton</span></div>
 </section>
 </li>
 <li>
@@ -656,6 +677,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="incrementAttempts()">
 <h3>incrementAttempts</h3>
 <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">incrementAttempts</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="openDraft()">
+<h3>openDraft</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">openDraft</span>()</div>
 </section>
 </li>
 <li>
