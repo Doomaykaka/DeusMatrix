@@ -54,7 +54,6 @@ public class GameWindow extends JFrame {
     private boolean gameOver;
 
     private static final int SECONDS_IN_MINUTE = 60;
-    private static final int MILLISECONDS_IN_SECOND = 1000;
 
     public GameWindow(User user, GameDifficult difficult) {
         this.user = user;
@@ -318,6 +317,12 @@ public class GameWindow extends JFrame {
                 return;
             }
 
+            boolean numIsCompleted = numIsCompleted(value);
+
+            if (numIsCompleted) {
+                hideCompletedNums(value);
+            }
+
             if (value != rightValue) {
                 incrementAttempts();
 
@@ -332,6 +337,28 @@ public class GameWindow extends JFrame {
             }
         } else {
             SupportFunctions.showMessage("Select field cell!");
+        }
+    }
+
+    private boolean numIsCompleted(int value) {
+        int completedValueCounts = 0;
+
+        for (int row = 0; row < GameField.FIELD_SIZE; row++) {
+            for (int column = 0; column < GameField.FIELD_SIZE; column++) {
+                if (cells[row][column].getText().equals(Integer.toString(value))) {
+                    completedValueCounts++;
+                }
+            }
+        }
+
+        return completedValueCounts == GameField.FIELD_SIZE - 1;
+    }
+
+    private void hideCompletedNums(int value) {
+        for (JButton numberButton : numberButtons) {
+            if (numberButton.getText().equals(Integer.toString(value))) {
+                numberButton.setVisible(false);
+            }
         }
     }
 

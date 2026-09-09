@@ -106,12 +106,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>private <a href="GameField.html" title="class in deusmatrix.models">GameField</a></code></div>
 <div class="col-second even-row-color"><code><a href="#gameField" class="member-name-link">gameField</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>private boolean</code></div>
-<div class="col-second odd-row-color"><code><a href="#solutionApplied" class="member-name-link">solutionApplied</a></code></div>
+<div class="col-first odd-row-color"><code>private int</code></div>
+<div class="col-second odd-row-color"><code><a href="#solutionsFound" class="member-name-link">solutionsFound</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>private int</code></div>
-<div class="col-second even-row-color"><code><a href="#solutionsFound" class="member-name-link">solutionsFound</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -140,19 +137,24 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#backtrack()" class="member-name-link">backtrack</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#countSolutions()" class="member-name-link">countSolutions</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isValidMove(int,int,int)" class="member-name-link">isValidMove</a><wbr>(int&nbsp;rowIndex,
- int&nbsp;columnIndex,
- int&nbsp;num)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fillOne()" class="member-name-link">fillOne</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#makeStepAndGoToNextStep(int,int)" class="member-name-link">makeStepAndGoToNextStep</a><wbr>(int&nbsp;row,
- int&nbsp;column)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private int[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findEmpty()" class="member-name-link">findEmpty</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#solve()" class="member-name-link">solve</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#haveOneSolution()" class="member-name-link">haveOneSolution</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isValidMove(int,int,int)" class="member-name-link">isValidMove</a><wbr>(int&nbsp;rowIndex,
+ int&nbsp;columnIndex,
+ int&nbsp;num)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#solveAndApply()" class="member-name-link">solveAndApply</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -183,12 +185,6 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">solutionsFound</span></div>
 </section>
 </li>
-<li>
-<section class="detail" id="solutionApplied">
-<h3>solutionApplied</h3>
-<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">solutionApplied</span></div>
-</section>
-</li>
 </ul>
 </section>
 </li>
@@ -212,22 +208,33 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="solve()">
-<h3>solve</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">solve</span>()</div>
+<section class="detail" id="haveOneSolution()">
+<h3>haveOneSolution</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">haveOneSolution</span>()</div>
 </section>
 </li>
 <li>
-<section class="detail" id="backtrack()">
-<h3>backtrack</h3>
-<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">backtrack</span>()</div>
+<section class="detail" id="solveAndApply()">
+<h3>solveAndApply</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">solveAndApply</span>()</div>
 </section>
 </li>
 <li>
-<section class="detail" id="makeStepAndGoToNextStep(int,int)">
-<h3>makeStepAndGoToNextStep</h3>
-<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">makeStepAndGoToNextStep</span><wbr><span class="parameters">(int&nbsp;row,
- int&nbsp;column)</span></div>
+<section class="detail" id="countSolutions()">
+<h3>countSolutions</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">countSolutions</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="fillOne()">
+<h3>fillOne</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">fillOne</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="findEmpty()">
+<h3>findEmpty</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">int[]</span>&nbsp;<span class="element-name">findEmpty</span>()</div>
 </section>
 </li>
 <li>

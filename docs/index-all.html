@@ -117,8 +117,6 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:B">B</h2>
 <dl class="index">
-<dt><a href="deusmatrix/models/GameFieldSolver.html#backtrack()" class="member-name-link">backtrack()</a> - Method in class deusmatrix.models.<a href="deusmatrix/models/GameFieldSolver.html" title="class in deusmatrix.models">GameFieldSolver</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="deusmatrix/models/GameField.html#BASE_SOLUTION" class="member-name-link">BASE_SOLUTION</a> - Static variable in class deusmatrix.models.<a href="deusmatrix/models/GameField.html" title="class in deusmatrix.models">GameField</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="deusmatrix/models/GameField.html#BLOCKS_IN_LINE_COUNT" class="member-name-link">BLOCKS_IN_LINE_COUNT</a> - Static variable in class deusmatrix.models.<a href="deusmatrix/models/GameField.html" title="class in deusmatrix.models">GameField</a></dt>
@@ -155,6 +153,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="deusmatrix/utils/Constants.html" class="type-name-link" title="class in deusmatrix.utils">Constants</a> - Class in <a href="deusmatrix/utils/package-summary.html">deusmatrix.utils</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="deusmatrix/utils/Constants.html#%3Cinit%3E()" class="member-name-link">Constants()</a> - Constructor for class deusmatrix.utils.<a href="deusmatrix/utils/Constants.html" title="class in deusmatrix.utils">Constants</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="deusmatrix/models/GameFieldSolver.html#countSolutions()" class="member-name-link">countSolutions()</a> - Method in class deusmatrix.models.<a href="deusmatrix/models/GameFieldSolver.html" title="class in deusmatrix.models">GameFieldSolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="deusmatrix/gui/GameWindow.html#create()" class="member-name-link">create()</a> - Method in class deusmatrix.gui.<a href="deusmatrix/gui/GameWindow.html" title="class in deusmatrix.gui">GameWindow</a></dt>
 <dd>&nbsp;</dd>
@@ -313,6 +313,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="deusmatrix/gui/GameWindow.html#fillGameField()" class="member-name-link">fillGameField()</a> - Method in class deusmatrix.gui.<a href="deusmatrix/gui/GameWindow.html" title="class in deusmatrix.gui">GameWindow</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="deusmatrix/models/GameFieldSolver.html#fillOne()" class="member-name-link">fillOne()</a> - Method in class deusmatrix.models.<a href="deusmatrix/models/GameFieldSolver.html" title="class in deusmatrix.models">GameFieldSolver</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="deusmatrix/gui/OptionsWindow.html#fillWindowControls(javax.swing.JPanel)" class="member-name-link">fillWindowControls(JPanel)</a> - Method in class deusmatrix.gui.<a href="deusmatrix/gui/OptionsWindow.html" title="class in deusmatrix.gui">OptionsWindow</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="deusmatrix/gui/MenuWindow.html#fillWindowElements()" class="member-name-link">fillWindowElements()</a> - Method in class deusmatrix.gui.<a href="deusmatrix/gui/MenuWindow.html" title="class in deusmatrix.gui">MenuWindow</a></dt>
@@ -320,6 +322,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="deusmatrix/gui/OptionsWindow.html#fillWindowOptions(javax.swing.JPanel)" class="member-name-link">fillWindowOptions(JPanel)</a> - Method in class deusmatrix.gui.<a href="deusmatrix/gui/OptionsWindow.html" title="class in deusmatrix.gui">OptionsWindow</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="deusmatrix/gui/GameWindow.html#finalizeGame(boolean)" class="member-name-link">finalizeGame(boolean)</a> - Method in class deusmatrix.gui.<a href="deusmatrix/gui/GameWindow.html" title="class in deusmatrix.gui">GameWindow</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="deusmatrix/models/GameFieldSolver.html#findEmpty()" class="member-name-link">findEmpty()</a> - Method in class deusmatrix.models.<a href="deusmatrix/models/GameFieldSolver.html" title="class in deusmatrix.models">GameFieldSolver</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:G">G</h2>
@@ -563,6 +567,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="deusmatrix/models/User.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class deusmatrix.models.<a href="deusmatrix/models/User.html" title="class in deusmatrix.models">User</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="deusmatrix/models/GameFieldSolver.html#haveOneSolution()" class="member-name-link">haveOneSolution()</a> - Method in class deusmatrix.models.<a href="deusmatrix/models/GameFieldSolver.html" title="class in deusmatrix.models">GameFieldSolver</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="deusmatrix/gui/MenuWindow.html#HEIGHT" class="member-name-link">HEIGHT</a> - Static variable in class deusmatrix.gui.<a href="deusmatrix/gui/MenuWindow.html" title="class in deusmatrix.gui">MenuWindow</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="deusmatrix/gui/OptionsWindow.html#HEIGHT" class="member-name-link">HEIGHT</a> - Static variable in class deusmatrix.gui.<a href="deusmatrix/gui/OptionsWindow.html" title="class in deusmatrix.gui">OptionsWindow</a></dt>
@@ -578,6 +584,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="deusmatrix/utils/HibernateConfiguration.HibernatePersistenceUnitInfo.html#%3Cinit%3E(deusmatrix.utils.ApplicationConfigReader)" class="member-name-link">HibernatePersistenceUnitInfo(ApplicationConfigReader)</a> - Constructor for class deusmatrix.utils.<a href="deusmatrix/utils/HibernateConfiguration.HibernatePersistenceUnitInfo.html" title="class in deusmatrix.utils">HibernateConfiguration.HibernatePersistenceUnitInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="deusmatrix/utils/HibernateConfiguration.html#hibernateProperties(deusmatrix.utils.ApplicationConfigReader)" class="member-name-link">hibernateProperties(ApplicationConfigReader)</a> - Static method in class deusmatrix.utils.<a href="deusmatrix/utils/HibernateConfiguration.html" title="class in deusmatrix.utils">HibernateConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="deusmatrix/gui/GameWindow.html#hideCompletedNums(int)" class="member-name-link">hideCompletedNums(int)</a> - Method in class deusmatrix.gui.<a href="deusmatrix/gui/GameWindow.html" title="class in deusmatrix.gui">GameWindow</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="deusmatrix/gui/GameWindow.html#hintButton" class="member-name-link">hintButton</a> - Variable in class deusmatrix.gui.<a href="deusmatrix/gui/GameWindow.html" title="class in deusmatrix.gui">GameWindow</a></dt>
 <dd>&nbsp;</dd>
@@ -646,8 +654,6 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><a href="deusmatrix/App.html#main(java.lang.String%5B%5D)" class="member-name-link">main(String[])</a> - Static method in class deusmatrix.<a href="deusmatrix/App.html" title="class in deusmatrix">App</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="deusmatrix/models/GameFieldSolver.html#makeStepAndGoToNextStep(int,int)" class="member-name-link">makeStepAndGoToNextStep(int, int)</a> - Method in class deusmatrix.models.<a href="deusmatrix/models/GameFieldSolver.html" title="class in deusmatrix.models">GameFieldSolver</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="deusmatrix/controllers/SudokuGameController.html#maxAttempts" class="member-name-link">maxAttempts</a> - Variable in class deusmatrix.controllers.<a href="deusmatrix/controllers/SudokuGameController.html" title="class in deusmatrix.controllers">SudokuGameController</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="deusmatrix/gui/MenuWindow.html" class="type-name-link" title="class in deusmatrix.gui">MenuWindow</a> - Class in <a href="deusmatrix/gui/package-summary.html">deusmatrix.gui</a></dt>
@@ -664,8 +670,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="deusmatrix/models/Statistic.html#middleWins" class="member-name-link">middleWins</a> - Variable in class deusmatrix.models.<a href="deusmatrix/models/Statistic.html" title="class in deusmatrix.models">Statistic</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="deusmatrix/gui/GameWindow.html#MILLISECONDS_IN_SECOND" class="member-name-link">MILLISECONDS_IN_SECOND</a> - Static variable in class deusmatrix.gui.<a href="deusmatrix/gui/GameWindow.html" title="class in deusmatrix.gui">GameWindow</a></dt>
-<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:N">N</h2>
 <dl class="index">
@@ -674,6 +678,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="deusmatrix/utils/Logger.html#NEW_LINE" class="member-name-link">NEW_LINE</a> - Static variable in class deusmatrix.utils.<a href="deusmatrix/utils/Logger.html" title="class in deusmatrix.utils">Logger</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="deusmatrix/gui/GameWindow.html#numberButtons" class="member-name-link">numberButtons</a> - Variable in class deusmatrix.gui.<a href="deusmatrix/gui/GameWindow.html" title="class in deusmatrix.gui">GameWindow</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="deusmatrix/gui/GameWindow.html#numIsCompleted(int)" class="member-name-link">numIsCompleted(int)</a> - Method in class deusmatrix.gui.<a href="deusmatrix/gui/GameWindow.html" title="class in deusmatrix.gui">GameWindow</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="deusmatrix/models/GameDifficult.html#NUMS_COUNT_TO_REMOVE_WITH_EASY_LEVEL" class="member-name-link">NUMS_COUNT_TO_REMOVE_WITH_EASY_LEVEL</a> - Static variable in enum class deusmatrix.models.<a href="deusmatrix/models/GameDifficult.html" title="enum class in deusmatrix.models">GameDifficult</a></dt>
 <dd>&nbsp;</dd>
@@ -922,11 +928,9 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="deusmatrix/utils/HibernateConfiguration.html#SLASH" class="member-name-link">SLASH</a> - Static variable in class deusmatrix.utils.<a href="deusmatrix/utils/HibernateConfiguration.html" title="class in deusmatrix.utils">HibernateConfiguration</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="deusmatrix/models/GameFieldSolver.html#solutionApplied" class="member-name-link">solutionApplied</a> - Variable in class deusmatrix.models.<a href="deusmatrix/models/GameFieldSolver.html" title="class in deusmatrix.models">GameFieldSolver</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="deusmatrix/models/GameFieldSolver.html#solutionsFound" class="member-name-link">solutionsFound</a> - Variable in class deusmatrix.models.<a href="deusmatrix/models/GameFieldSolver.html" title="class in deusmatrix.models">GameFieldSolver</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="deusmatrix/models/GameFieldSolver.html#solve()" class="member-name-link">solve()</a> - Method in class deusmatrix.models.<a href="deusmatrix/models/GameFieldSolver.html" title="class in deusmatrix.models">GameFieldSolver</a></dt>
+<dt><a href="deusmatrix/models/GameFieldSolver.html#solveAndApply()" class="member-name-link">solveAndApply()</a> - Method in class deusmatrix.models.<a href="deusmatrix/models/GameFieldSolver.html" title="class in deusmatrix.models">GameFieldSolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="deusmatrix/gui/GameWindow.html#solvedGameField" class="member-name-link">solvedGameField</a> - Variable in class deusmatrix.gui.<a href="deusmatrix/gui/GameWindow.html" title="class in deusmatrix.gui">GameWindow</a></dt>
 <dd>&nbsp;</dd>
