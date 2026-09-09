@@ -1,9 +1,9 @@
 package deusmatrix.utils;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
@@ -23,12 +23,14 @@ public class ApplicationConfigReader {
 
     private static final String CONFIG_FILENAME = "settings.conf";
 
+    private static final String CONFIG_PARENT_FOLDER_NAME = "user.dir";
+
     private static final String PARSE_EXCEPTION_PREFIX = "Param ";
     private static final String PARSE_EXCEPTION_POSTFIX = " not parsed";
 
     private String dbType = "sqlite";
     private String dbDriver = "org.sqlite.JDBC";
-    private String dbAddress = getDefaultDatabasePath();
+    private String dbAddress = ". ds.db";
     private String dbPort = "";
     private String dbName = "";
     private String dbUser = "";
@@ -43,32 +45,28 @@ public class ApplicationConfigReader {
 
     private static ApplicationConfigReader lastConfig;
 
-    public ApplicationConfigReader() throws IOException {
-        onReaderCreate(getDefaultConfigDirectory().toString(), CONFIG_FILENAME);
+    public ApplicationConfigReader() throws IOException, FileNotFoundException {
+        onReaderCreate(System.getProperty(CONFIG_PARENT_FOLDER_NAME), CONFIG_FILENAME);
     }
 
-    public ApplicationConfigReader(String pathToFile, String filename) throws IOException {
+    public ApplicationConfigReader(String pathToFile, String filename) throws IOException, FileNotFoundException {
         onReaderCreate(pathToFile, filename);
     }
 
-    private void onReaderCreate(String pathToFile, String filename) throws IOException {
-        pathToConfig = Path.of(pathToFile, filename).toAbsolutePath().normalize();
+    private void onReaderCreate(String pathToFile, String filename) throws IOException, FileNotFoundException {
+        pathToConfig = Path.of(Path.of(pathToFile, filename).toFile().getAbsolutePath());
 
-        if (!Files.exists(pathToConfig)) {
+        if (!pathToConfig.toFile().exists()) {
             saveConfig();
         }
 
+        FileInputStream configFileInputStream = new FileInputStream(pathToConfig.toString());
         Properties prop = new Properties();
-        try (FileInputStream configFileInputStream = new FileInputStream(pathToConfig.toFile())) {
-            prop.load(configFileInputStream);
-        }
+        prop.load(configFileInputStream);
 
         dbType = getProperty(prop, PROPERTY_NAME_DB_TYPE);
         dbDriver = getProperty(prop, PROPERTY_NAME_DB_DRIVER);
         dbAddress = getProperty(prop, PROPERTY_NAME_DB_ADDRESS);
-        if (". ds.db".equals(dbAddress)) {
-            dbAddress = getDefaultDatabasePath();
-        }
         dbPort = getProperty(prop, PROPERTY_NAME_DB_PORT);
         dbName = getProperty(prop, PROPERTY_NAME_DB_NAME);
         dbUser = getProperty(prop, PROPERTY_NAME_DB_USER);
@@ -83,7 +81,15 @@ public class ApplicationConfigReader {
     }
 
     public void saveConfig() throws IOException {
-        Files.createDirectories(pathToConfig.getParent());
+        pathToConfig = Path.of(Path.of(System.getProperty(CONFIG_PARENT_FOLDER_NAME), CONFIG_FILENAME)
+                .toFile()
+                .getAbsolutePath());
+
+        if (!pathToConfig.toFile().exists() && !pathToConfig.toFile().createNewFile()) {
+            throw new FileNotFoundException(Constants.CONFIG_CANT_BE_CREATED_MESSAGE + this.pathToConfig.toString());
+        }
+
+        FileOutputStream configFOS = new FileOutputStream(this.pathToConfig.toString());
         Properties properties = new Properties();
 
         setProperty(properties, PROPERTY_NAME_DB_TYPE, dbType);
@@ -99,9 +105,9 @@ public class ApplicationConfigReader {
         setProperty(properties, PROPERTY_NAME_USE_LAF, useLAF.toString());
         setProperty(properties, PROPERTY_NAME_USE_DARK, useDark.toString());
 
-        try (FileOutputStream configFOS = new FileOutputStream(pathToConfig.toFile())) {
-            properties.store(configFOS, "");
-        }
+        properties.store(configFOS, Constants.DEFAULT_TEXT);
+        configFOS.flush();
+        configFOS.close();
     }
 
     private String getProperty(Properties prop, String propertyName) throws IOException {
@@ -174,13 +180,5 @@ public class ApplicationConfigReader {
 
     public static ApplicationConfigReader getLastConfig() {
         return lastConfig;
-    }
-
-    private static Path getDefaultConfigDirectory() {
-        return Path.of(System.getProperty("user.home"), ".deusmatrix");
-    }
-
-    private static String getDefaultDatabasePath() {
-        return getDefaultConfigDirectory().resolve("ds.db").toString();
     }
 }

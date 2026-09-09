@@ -107,14 +107,10 @@ public class SaveLoadWindow extends JFrame {
         return e -> {
             if (!e.getValueIsAdjusting()) {
                 int viewRow = table.getSelectedRow();
-                if (viewRow < 0) {
-                    return;
-                }
+                if (viewRow < 0) return;
 
                 int viewColumn = table.getSelectedColumn();
-                if (viewColumn < 0) {
-                    return;
-                }
+                if (viewColumn < 0) return;
 
                 int modelRow = table.convertRowIndexToModel(viewRow);
                 int modelColumn = table.convertColumnIndexToModel(viewColumn);
@@ -241,7 +237,9 @@ public class SaveLoadWindow extends JFrame {
 
     private void initController() {
         UsersDAO usersDAO = new UsersDAO(HibernateConfiguration.getEntityManagerFactory());
-        gameOperationsController = new GameOperationsController(usersDAO);
+        StatisticsDAO statisticsDAO = new StatisticsDAO(HibernateConfiguration.getEntityManagerFactory());
+
+        gameOperationsController = new GameOperationsController(usersDAO, statisticsDAO);
     }
 
     private void loadUsers() {
@@ -270,18 +268,13 @@ public class SaveLoadWindow extends JFrame {
 
     private void loadUserFromFile() {
         File saveFile = SupportFunctions.chooseFile();
-        if (saveFile == null) {
-            return;
-        }
+        if (saveFile == null) return;
 
         User loadedUser = gameOperationsController.importUser(saveFile);
         if (loadedUser != null) {
-            if (gameOperationsController.saveUser(loadedUser)) {
-                refreshTable();
-                SupportFunctions.showMessage("User imported from file");
-            } else {
-                SupportFunctions.showMessage("Failed to save imported user");
-            }
+            gameOperationsController.saveUser(loadedUser);
+            refreshTable();
+            SupportFunctions.showMessage("User imported from file");
         } else {
             SupportFunctions.showMessage("Failed to import user");
         }
@@ -312,10 +305,8 @@ public class SaveLoadWindow extends JFrame {
             return;
         }
 
-        if (gameOperationsController.exportUser(getCurrentUser(), saveFile)) {
-            SupportFunctions.showMessage("User exported to file");
-        } else {
-            SupportFunctions.showMessage("Failed to export user");
-        }
+        gameOperationsController.exportUser(getCurrentUser(), saveFile);
+
+        SupportFunctions.showMessage("User exported to file");
     }
 }

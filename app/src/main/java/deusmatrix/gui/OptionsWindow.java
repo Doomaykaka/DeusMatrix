@@ -115,8 +115,6 @@ public class OptionsWindow extends JFrame {
                     this.dispose();
 
                     break;
-                default:
-                    break;
             }
         };
 

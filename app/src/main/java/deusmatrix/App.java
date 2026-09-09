@@ -11,7 +11,6 @@ import deusmatrix.utils.Logger;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -26,7 +25,6 @@ public class App {
 
         prepareDatabase(appConfigReader);
         prepareGUI(appConfigReader);
-        Runtime.getRuntime().addShutdownHook(new Thread(HibernateConfiguration::shutdown));
 
         Logger.getInstance().info("App configurated");
 
@@ -38,14 +36,16 @@ public class App {
     }
 
     private static void startUpApplication(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            MenuWindow window = new MenuWindow();
-            window.showScreensaver();
+        MenuWindow window = new MenuWindow();
+        SwingUtilities.invokeLater(() -> window.showScreensaver());
 
-            Timer timer = new Timer((int) SCREENSAVER_TIME, event -> window.showWindow());
-            timer.setRepeats(false);
-            timer.start();
-        });
+        try {
+            Thread.sleep(SCREENSAVER_TIME);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        SwingUtilities.invokeLater(() -> window.showWindow());
     }
 
     private static void prepareDatabase(ApplicationConfigReader appConfigReader) {

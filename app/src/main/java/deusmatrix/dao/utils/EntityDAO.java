@@ -1,9 +1,7 @@
 package deusmatrix.dao.utils;
 
 import deusmatrix.utils.Logger;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -13,143 +11,172 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
 public abstract class EntityDAO<T> {
-    protected final EntityManagerFactory entityManagerFactory;
+    protected EntityManagerFactory entityManagerFactory;
 
     public EntityDAO(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
 
-    public EntityManagerFactory getEntityManagerFactory() {
-        return entityManagerFactory;
-    }
-
     public T get(Long id) {
+        T result = null;
+
         if (!queryIsReadyToCreate(id)) {
-            return null;
+            return result;
         }
 
-        return executeSingleResultQuery(manager -> {
+        result = executeSingleResultQuery((EntityManager manager) -> {
             CriteriaBuilder builder = manager.getCriteriaBuilder();
+
             CriteriaQuery<T> query = getSelectQuery(builder, id);
             TypedQuery<T> preparedQuery = manager.createQuery(query);
+
             return preparedQuery.getSingleResult();
         });
+
+        return result;
     }
 
     public List<T> getAll() {
+        List<T> result = null;
+
         if (!queryIsReadyToCreate()) {
-            return Collections.emptyList();
+            return result;
         }
 
-        List<T> result = executeListResultQuery(manager -> {
+        result = executeListResultQuery((EntityManager manager) -> {
             CriteriaBuilder builder = manager.getCriteriaBuilder();
+
             CriteriaQuery<T> query = getSelectAllQuery(builder);
             TypedQuery<T> preparedQuery = manager.createQuery(query);
+
             return preparedQuery.getResultList();
         });
 
-        return result == null ? Collections.emptyList() : result;
+        return result;
     }
 
     public boolean update(T entity) {
+        boolean isUpdated = false;
+
         if (!queryIsReadyToCreate(entity)) {
-            return false;
+            return isUpdated;
         }
 
-        return executeQuery(manager -> manager.merge(entity));
+        executeQuery((EntityManager manager) -> {
+            manager.merge(entity);
+        });
+
+        isUpdated = true;
+
+        return isUpdated;
     }
 
     public boolean remove(T entity) {
+        boolean isRemoved = false;
+
         if (!queryIsReadyToCreate(entity)) {
-            return false;
+            return isRemoved;
         }
 
-        AtomicBoolean removed = new AtomicBoolean(false);
-        boolean executed = executeQuery(manager -> {
-            T foundEntity = searchEntity(entity, manager);
-            if (foundEntity != null) {
-                manager.remove(foundEntity);
-                removed.set(true);
-            }
+        executeQuery((EntityManager manager) -> {
+            T foundedEntity = searchEntity(entity, manager);
+
+            manager.remove(foundedEntity);
         });
 
-        return executed && removed.get();
+        isRemoved = true;
+
+        return isRemoved;
     }
 
     public boolean create(T entity) {
+        boolean isCreated = false;
+
         if (!queryIsReadyToCreate(entity)) {
-            return false;
+            return isCreated;
         }
 
-        AtomicBoolean created = new AtomicBoolean(false);
-        boolean executed = executeQuery(manager -> {
-            T foundEntity = searchEntity(entity, manager);
-            if (foundEntity == null) {
-                manager.persist(entity);
-                created.set(true);
+        executeQuery((EntityManager manager) -> {
+            T foundedEntity = searchEntity(entity, manager);
+
+            if (foundedEntity != null) {
+                Logger.getInstance().warning("Cant create entity");
             } else {
-                Logger.getInstance().warning("Can't create entity: it already exists");
+                manager.persist(entity);
             }
         });
 
-        return executed && created.get();
+        isCreated = true;
+
+        return isCreated;
     }
 
-    protected boolean executeQuery(QueryBody queryBody) {
-        EntityManager manager = null;
-        EntityTransaction transaction = null;
+    protected <M> void executeQuery(QueryBody queryBody) {
+        EntityManager manager = this.entityManagerFactory.createEntityManager();
+
         try {
-            manager = entityManagerFactory.createEntityManager();
-            transaction = manager.getTransaction();
+            EntityTransaction transaction = manager.getTransaction();
+
             transaction.begin();
+
             queryBody.execute(manager);
+
             transaction.commit();
-            return true;
-        } catch (PersistenceException | IllegalArgumentException e) {
-            rollback(transaction);
-            Logger.getInstance().warning("Can't execute query: " + e.getMessage());
-            return false;
-        } finally {
-            close(manager);
+        } catch (PersistenceException e) {
+            Logger.getInstance().warning("Cant execute query");
+        }
+
+        if (manager != null) {
+            manager.close();
         }
     }
 
     protected <M> M executeSingleResultQuery(SingleResultQueryBody<M> queryBody) {
-        EntityManager manager = null;
-        EntityTransaction transaction = null;
+        M result = null;
+
+        EntityManager manager = this.entityManagerFactory.createEntityManager();
+
         try {
-            manager = entityManagerFactory.createEntityManager();
-            transaction = manager.getTransaction();
+            EntityTransaction transaction = manager.getTransaction();
+
             transaction.begin();
-            M result = queryBody.execute(manager);
+
+            result = queryBody.execute(manager);
+
             transaction.commit();
-            return result;
-        } catch (PersistenceException | IllegalArgumentException e) {
-            rollback(transaction);
-            Logger.getInstance().warning("Can't execute single result query: " + e.getMessage());
-            return null;
-        } finally {
-            close(manager);
+        } catch (PersistenceException e) {
+            Logger.getInstance().warning("Cant execute single result query");
         }
+
+        if (manager != null) {
+            manager.close();
+        }
+
+        return result;
     }
 
     protected <M> List<M> executeListResultQuery(ListResultQueryBody<M> queryBody) {
-        EntityManager manager = null;
-        EntityTransaction transaction = null;
+        List<M> result = null;
+
+        EntityManager manager = this.entityManagerFactory.createEntityManager();
+
         try {
-            manager = entityManagerFactory.createEntityManager();
-            transaction = manager.getTransaction();
+            EntityTransaction transaction = manager.getTransaction();
+
             transaction.begin();
-            List<M> result = queryBody.execute(manager);
+
+            result = queryBody.execute(manager);
+
             transaction.commit();
-            return result;
-        } catch (PersistenceException | IllegalArgumentException e) {
-            rollback(transaction);
-            Logger.getInstance().warning("Can't execute list result query: " + e.getMessage());
-            return Collections.emptyList();
-        } finally {
-            close(manager);
+        } catch (PersistenceException e) {
+            Logger.getInstance().warning("Cant execute list result query");
         }
+
+        if (manager != null) {
+            manager.close();
+        }
+
+        return result;
     }
 
     protected abstract CriteriaQuery<T> getSelectQuery(CriteriaBuilder builder, Long id);
@@ -159,38 +186,50 @@ public abstract class EntityDAO<T> {
     protected abstract T searchEntity(T entity, EntityManager manager);
 
     protected boolean queryIsReadyToCreate(T entity) {
+        boolean isReady = false;
+
         if (entity == null) {
             Logger.getInstance().warning("Empty object");
-            return false;
+            return isReady;
         }
-        return queryIsReadyToCreate();
+
+        if (!queryIsReadyToCreate()) {
+            Logger.getInstance().warning("Query must be redy to create");
+            return isReady;
+        }
+
+        isReady = true;
+
+        return isReady;
     }
 
     protected boolean queryIsReadyToCreate(Long id) {
+        boolean isReady = false;
+
         if (id == null) {
             Logger.getInstance().warning("Empty identifier");
-            return false;
+            return isReady;
         }
-        return queryIsReadyToCreate();
+
+        if (!queryIsReadyToCreate()) {
+            Logger.getInstance().warning("Query must be redy to create");
+            return isReady;
+        }
+
+        isReady = true;
+
+        return isReady;
     }
 
     protected boolean queryIsReadyToCreate() {
-        if (entityManagerFactory == null) {
+        boolean isReady = false;
+
+        isReady = this.entityManagerFactory != null;
+
+        if (!isReady) {
             Logger.getInstance().warning("Empty entity manager factory");
-            return false;
         }
-        return true;
-    }
 
-    private void rollback(EntityTransaction transaction) {
-        if (transaction != null && transaction.isActive()) {
-            transaction.rollback();
-        }
-    }
-
-    private void close(EntityManager manager) {
-        if (manager != null && manager.isOpen()) {
-            manager.close();
-        }
+        return isReady;
     }
 }

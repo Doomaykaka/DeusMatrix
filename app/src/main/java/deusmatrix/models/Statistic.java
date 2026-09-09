@@ -2,15 +2,7 @@ package deusmatrix.models;
 
 import java.util.Date;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -27,7 +19,6 @@ public class Statistic {
     private Long id;
 
     @NotNull @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private Date lastPlayDate;
 
     @NotNull @Column(nullable = false)
@@ -74,7 +65,9 @@ public class Statistic {
             Long easyLose,
             Long middleLose,
             Long hardLose) {
-        this.id = null;
+        final Long DEFAULT_ID = null;
+
+        this.id = DEFAULT_ID;
         this.lastPlayDate = lastPlayDate;
         this.daysInGame = daysInGame;
         this.easyWins = easyWins;
@@ -186,18 +179,36 @@ public class Statistic {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
         Statistic statistic = (Statistic) o;
-        return id != null && Objects.equals(id, statistic.id);
+        return Objects.equals(id, statistic.id)
+                && Objects.equals(lastPlayDate, statistic.lastPlayDate)
+                && Objects.equals(daysInGame, statistic.daysInGame)
+                && Objects.equals(easyWins, statistic.easyWins)
+                && Objects.equals(middleWins, statistic.middleWins)
+                && Objects.equals(hardWins, statistic.hardWins)
+                && Objects.equals(easyBestTime, statistic.easyBestTime)
+                && Objects.equals(middleBestTime, statistic.middleBestTime)
+                && Objects.equals(hardBestTime, statistic.hardBestTime)
+                && Objects.equals(easyLose, statistic.easyLose)
+                && Objects.equals(middleLose, statistic.middleLose)
+                && Objects.equals(hardLose, statistic.hardLose);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(
+                id,
+                lastPlayDate,
+                daysInGame,
+                easyWins,
+                middleWins,
+                hardWins,
+                easyBestTime,
+                middleBestTime,
+                hardBestTime,
+                easyLose,
+                middleLose,
+                hardLose);
     }
 }
